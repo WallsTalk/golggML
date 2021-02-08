@@ -2,6 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 
 league_list = ['LPL', 'LEC', 'LCK', 'LCS']
+league_list = ['LEC']
 
 list_of_games = {}
 for league in league_list:
@@ -35,28 +36,28 @@ for league, games in list_of_games.items():
         soup = BeautifulSoup(html_content, "lxml")
         #print(soup.prettify())
         game_time = soup.find("div", attrs={"class": "col-6 text-center"}).contents[3].contents[0]
-        gold_list = soup.find_all("table", attrs={"class": "small_table"})[0].contents[3].contents
-        print(gold_list[1].contents)
-        print(gold_list[3].contents)
+        gold_dmg_tables = soup.find_all("table", attrs={"class": "small_table"})
+        # take prec for each role by <td>
+        gold_dist = {}
+        dmg_dist = {}
+        for item in gold_dmg_tables[0].find_all("tr")[1:]:
+            gold_dist[item.contents[0].contents[0]] = [item.contents[1].contents[0], item.contents[3].contents[0]]
+        for item in gold_dmg_tables[1].find_all("tr")[1:]:
+            print(item)
+            dmg_dist[item.contents[0].contents[0]] = [item.contents[1].contents[0], item.contents[3].contents[0]]
+        print(gold_dist)
+        print(dmg_dist)
         break
     break
 
-    # var
-    # blueGoldData = {
-    #     labels: ['MID', 'ADC', 'SUPPORT', 'JUNGLE', 'TOP'],
-    #     datasets: [
-    #         {
-    #             label: 'Invictus Gaming',
-    #             borderColor: 'rgba(97,148,188,1)',
-    #             pointBackgroundColor: 'rgba(97,148,188,1)',
-    #             data: [13.021, 13.271, 6.952, 12.294, 13.173]
-    #         },
-    #         {
-    #             label: 'Royal Never Give Up',
-    #             borderColor: 'rgba(238,50,51,1)',
-    #             pointBackgroundColor: 'rgba(238,50,51,1)',
-    #             data: [8.386, 11.916, 6.294, 9.68, 10.363]
-    #         }
-    #     ]
-    # };
+    # ['\n', < tr > < td > < / td > < td
+    #
+    #
+    # class ="blue_line text-center" > IG < / td > < td class ="red_line text-center" > RNG < / td > < / tr >, '\n', < tr > < td > TOP < / td > < td > 22.4 % < / td >
+    #
+    # < td > 22.2 % < / td > < / tr >, '\n', < tr > < td > JUNGLE < / td > < td > 20.9 % < / td >
+    # < td > 20.8 % < / td > < / tr >, '\n', < tr > < td > MID < / td > < td > 22.2 % < / td >
+    # < td > 18 % < / td > < / tr >, '\n', < tr > < td > ADC < / td > < td > 22.6 % < / td >
+    # < td > 25.5 % < / td > < / tr >, '\n', < tr > < td > SUPPORT < / td > < td > 11.8 % < / td >
+    # < td > 13.5 % < / td > < / tr >, '\n']
 

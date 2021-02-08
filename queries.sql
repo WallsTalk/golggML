@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS game_teams_picks (
 	top_pick_id integer,
 	jg_pick_id integer,
 	mid_pick_id integer,
-	bot_pick_id integer,
+	adc_pick_id integer,
 	sup_pick_id integer,
 	ban_1 integer,
 	ban_2 integer,
@@ -31,7 +31,7 @@ CREATE TABLE IF NOT EXISTS game_teams_distribution (
 	top float,
 	jg float,
 	mid float,
-	bot float,
+	adc float,
 	sup float
 );
 
