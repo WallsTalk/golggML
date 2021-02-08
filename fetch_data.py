@@ -35,7 +35,28 @@ for league, games in list_of_games.items():
         soup = BeautifulSoup(html_content, "lxml")
         #print(soup.prettify())
         game_time = soup.find("div", attrs={"class": "col-6 text-center"}).contents[3].contents[0]
-        blue_gold_list = soup.find_all("table", attrs={"class": "table_list"})
-        print(blue_gold_list[0])
+        gold_list = soup.find_all("table", attrs={"class": "small_table"})[0].contents[3].contents
+        print(gold_list[1].contents)
+        print(gold_list[3].contents)
         break
     break
+
+    # var
+    # blueGoldData = {
+    #     labels: ['MID', 'ADC', 'SUPPORT', 'JUNGLE', 'TOP'],
+    #     datasets: [
+    #         {
+    #             label: 'Invictus Gaming',
+    #             borderColor: 'rgba(97,148,188,1)',
+    #             pointBackgroundColor: 'rgba(97,148,188,1)',
+    #             data: [13.021, 13.271, 6.952, 12.294, 13.173]
+    #         },
+    #         {
+    #             label: 'Royal Never Give Up',
+    #             borderColor: 'rgba(238,50,51,1)',
+    #             pointBackgroundColor: 'rgba(238,50,51,1)',
+    #             data: [8.386, 11.916, 6.294, 9.68, 10.363]
+    #         }
+    #     ]
+    # };
+
