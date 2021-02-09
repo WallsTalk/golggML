@@ -27,7 +27,9 @@ for league in league_list:
                 game_id += 1
                 num_of_games -= 1
 
+
 # Now we have a whole list of  games
+# Let's fill db for each game create a tuple and insert
 for league, games in list_of_games.items():
     for game in games:
         print(game)
@@ -36,17 +38,17 @@ for league, games in list_of_games.items():
         soup = BeautifulSoup(html_content, "lxml")
         #print(soup.prettify())
         game_time = soup.find("div", attrs={"class": "col-6 text-center"}).contents[3].contents[0]
-        gold_dmg_tables = soup.find_all("table", attrs={"class": "small_table"})
+        # gold_dmg_tables = soup.find_all("table", attrs={"class": "small_table"})
         # take prec for each role by <td>
-        gold_dist = {}
-        dmg_dist = {}
-        for item in gold_dmg_tables[0].find_all("tr")[1:]:
-            gold_dist[item.contents[0].contents[0]] = [item.contents[1].contents[0], item.contents[3].contents[0]]
-        for item in gold_dmg_tables[1].find_all("tr")[1:]:
-            print(item)
-            dmg_dist[item.contents[0].contents[0]] = [item.contents[1].contents[0], item.contents[3].contents[0]]
-        print(gold_dist)
-        print(dmg_dist)
+        # gold_dist = {}
+        # dmg_dist = {}
+        # for item in gold_dmg_tables[0].find_all("tr")[1:]:
+        #     gold_dist[item.contents[0].contents[0]] = [item.contents[1].contents[0], item.contents[3].contents[0]]
+        # for item in gold_dmg_tables[1].find_all("tr")[1:]:
+        #     print(item)
+        #     #dmg_dist[item.contents[0].contents[0]] = [item.contents[1].contents[0], item.contents[3].contents[0]]
+        # print(gold_dist)
+        # print(dmg_dist)
         break
     break
 

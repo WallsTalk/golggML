@@ -4,9 +4,8 @@ CREATE TABLE IF NOT EXISTS game (
 	game_patch varchar,
 	game_duration integer,
 	b_team_id integer,
-	r_team_id integer,
+	r_team_id integer
 );
-
 CREATE TABLE IF NOT EXISTS game_teams_picks (
 	game_id integer,
 	team_id integer,
@@ -23,30 +22,25 @@ CREATE TABLE IF NOT EXISTS game_teams_picks (
 	ban_4 integer,
 	ban_5 integer
 );
-
-CREATE TABLE IF NOT EXISTS game_teams_distribution (
+CREATE TABLE IF NOT EXISTS game_teams_stats (
 	game_id integer,
 	team_id integer,
-	dist_type varchar,
+	stat_type varchar,
 	top float,
 	jg float,
 	mid float,
 	adc float,
 	sup float
 );
-
-
 CREATE TABLE IF NOT EXISTS team (
 	team_id integer,
 	team_name varchar,
 	region_id varchar
 );
-
 CREATE TABLE IF NOT EXISTS region (
 	region_id integer,
 	region_name varchar
 );
-
 CREATE TABLE IF NOT EXISTS champions (
 	champion_id integer,
 	champion_name varchar
