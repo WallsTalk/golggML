@@ -23,7 +23,7 @@ for league in league_list:
             # For each game in the series id goes up + 1
             game_id = int(tr.contents[0].contents[0]['href'].split("/")[3])
             while num_of_games > 0:
-                list_of_games[league].append([game_id, tr.contents[5].contents[0], tr.contents[6].contents[0]])
+                list_of_games[league].append([game_id, tr.contents[6].contents[0], tr.contents[5].contents[0]])
                 game_id += 1
                 num_of_games -= 1
 
@@ -36,8 +36,26 @@ for league, games in list_of_games.items():
         link = "https://gol.gg/game/stats/%s/page-game/" % game[0]
         html_content = requests.get(link).text
         soup = BeautifulSoup(html_content, "lxml")
-        #print(soup.prettify())
+
+        # game = [game_id, patch, date]
+        # _data is tableName_data to be inserted into row of a table
+        game_data = game
+        team_data = []
+        region_data = []
         game_time = soup.find("div", attrs={"class": "col-6 text-center"}).contents[3].contents[0]
+        blue_team = soup.find("div", attrs={"class": "col-12 blue-line-header"}).contents
+        red_team = soup.find("div", attrs={"class": "col-12 red-line-header"}).contents
+        game_data += [game_time, blue_team[1]['href'].split("/")[3], red_team[1]['href'].split("/")[3]]
+
+        # [('1153', 'Misfits Gaming', 'LEC'), ('1152', 'MAD Lions', 'LEC')]
+        team_data = [
+            (blue_team[1]['href'].split("/")[3], blue_team[1].text, league),
+            (red_team[1]['href'].split("/")[3], red_team[1].text, league)
+            ]
+
+        # (27847, '2021-01-24', '11.1', '32:00', '1153', '1152')
+        game_data = tuple(game_data)
+
         # gold_dmg_tables = soup.find_all("table", attrs={"class": "small_table"})
         # take prec for each role by <td>
         # gold_dist = {}
@@ -50,16 +68,3 @@ for league, games in list_of_games.items():
         # print(gold_dist)
         # print(dmg_dist)
         break
-    break
-
-    # ['\n', < tr > < td > < / td > < td
-    #
-    #
-    # class ="blue_line text-center" > IG < / td > < td class ="red_line text-center" > RNG < / td > < / tr >, '\n', < tr > < td > TOP < / td > < td > 22.4 % < / td >
-    #
-    # < td > 22.2 % < / td > < / tr >, '\n', < tr > < td > JUNGLE < / td > < td > 20.9 % < / td >
-    # < td > 20.8 % < / td > < / tr >, '\n', < tr > < td > MID < / td > < td > 22.2 % < / td >
-    # < td > 18 % < / td > < / tr >, '\n', < tr > < td > ADC < / td > < td > 22.6 % < / td >
-    # < td > 25.5 % < / td > < / tr >, '\n', < tr > < td > SUPPORT < / td > < td > 11.8 % < / td >
-    # < td > 13.5 % < / td > < / tr >, '\n']
-

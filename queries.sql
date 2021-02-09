@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS game (
-	game_id integer,
+	game_id integer unique,
 	game_date varchar,
 	game_patch varchar,
 	game_duration integer,
@@ -33,13 +33,9 @@ CREATE TABLE IF NOT EXISTS game_teams_stats (
 	sup float
 );
 CREATE TABLE IF NOT EXISTS team (
-	team_id integer,
+	team_id integer unique,
 	team_name varchar,
-	region_id varchar
-);
-CREATE TABLE IF NOT EXISTS region (
-	region_id integer,
-	region_name varchar
+	region varchar
 );
 CREATE TABLE IF NOT EXISTS champions (
 	champion_id integer,
