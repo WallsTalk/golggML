@@ -37,24 +37,20 @@ for league, games in list_of_games.items():
         html_content = requests.get(link).text
         soup = BeautifulSoup(html_content, "lxml")
 
-        # game = [game_id, patch, date]
-        # _data is tableName_data to be inserted into row of a table
-        game_data = game
-        team_data = []
-        region_data = []
         game_time = soup.find("div", attrs={"class": "col-6 text-center"}).contents[3].contents[0]
         blue_team = soup.find("div", attrs={"class": "col-12 blue-line-header"}).contents
         red_team = soup.find("div", attrs={"class": "col-12 red-line-header"}).contents
-        game_data += [game_time, blue_team[1]['href'].split("/")[3], red_team[1]['href'].split("/")[3]]
 
-        # [('1153', 'Misfits Gaming', 'LEC'), ('1152', 'MAD Lions', 'LEC')]
+        # INSERT INTO GAME game_data =(27847, '2021-01-24', '11.1', '32:00', '1153', '1152')
+        game_data = game + [game_time, blue_team[1]['href'].split("/")[3], red_team[1]['href'].split("/")[3]]
+        game_data = tuple(game_data)
+        
+        # for each in team_data = [('1153', 'Misfits Gaming', 'LEC'), ('1152', 'MAD Lions', 'LEC')] INSERT INTO TEAMS
         team_data = [
             (blue_team[1]['href'].split("/")[3], blue_team[1].text, league),
             (red_team[1]['href'].split("/")[3], red_team[1].text, league)
             ]
 
-        # (27847, '2021-01-24', '11.1', '32:00', '1153', '1152')
-        game_data = tuple(game_data)
 
         # gold_dmg_tables = soup.find_all("table", attrs={"class": "small_table"})
         # take prec for each role by <td>
