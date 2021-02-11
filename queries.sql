@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS game (
 CREATE TABLE IF NOT EXISTS game_teams_picks (
 	game_id integer,
 	team_id integer,
-	team_color varchar,
+	team_color integer,
 	result integer,
 	top_pick_id integer,
 	jg_pick_id integer,
@@ -26,11 +26,11 @@ CREATE TABLE IF NOT EXISTS game_teams_stats (
 	game_id integer,
 	team_id integer,
 	stat_type varchar,
-	top float,
-	jg float,
-	mid float,
-	adc float,
-	sup float
+	top varchar,
+	jg varchar,
+	mid varchar,
+	adc varchar,
+	sup varchar
 );
 CREATE TABLE IF NOT EXISTS team (
 	team_id integer unique,

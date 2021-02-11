@@ -2,18 +2,16 @@ import json
 from bs4 import BeautifulSoup
 import requests
 
-
 # Now we have a whole list of games
 # Let's fill db for each game create a tuple and insert
 with open("list_of_games.txt", "r") as games_list_file:
     list_of_games = json.loads(games_list_file.read().replace("'", '"'))
 
-
 #  dicts for tables maped by id of row and object of table
 team_data = {}
 game_data = {}
 game_teams_picks_data = {}
-champions_data = {}
+game_teams_stats_data = {}
 for league, games in list_of_games.items():
     for game in games:
         link = "https://gol.gg/game/stats/%s/page-game/" % game[0]
@@ -39,29 +37,63 @@ for league, games in list_of_games.items():
         if blue_team_id not in team_data.keys():
             team_data[blue_team_id] = (blue_team[1].text, league)
         if red_team_id not in team_data.keys():
-            team_data[red_team_id] = (blue_team[1].text, league)
+            team_data[red_team_id] = (red_team[1].text, league)
 
+        # getting picks and bans for eatch team
+        blue_bans = []
+        blue_picks = []
+        red_bans = []
+        red_picks = []
+        bans_section = soup.find_all("div", text="Bans", attrs={"class": "col-2"})
+        picks_section = soup.find_all("div", text="Picks", attrs={"class": "col-2"})
+        for ban in bans_section[0].find_next("div", attrs={"class": "col-10"}).find_all("a"):
+            blue_bans.append(int(ban['href'].split("/")[3]))
+        for ban in bans_section[1].find_next("div", attrs={"class": "col-10"}).find_all("a"):
+            red_bans.append(int(ban['href'].split("/")[3]))
 
-        # just get all champs and bans for one side
-        # INSERT INTO CHAMPIONS ('140', 'Kaisa') for each ID
-        blue_bans = soup.find("div", attrs={"class": "col-10"})
-        bans_
-        for item in blue_bans.find_all("a"):
-            champ_id = item['href'].split("/")[3]
-            if champ_id not in champions_data.keys():
-                champions_data[champ_id] = (item['title'].replace(" stats", ""),)
+        for pick in picks_section[0].find_next("div", attrs={"class": "col-10"}).find_all("a"):
+            blue_picks.append(int(pick['href'].split("/")[3]))
+        for pick in picks_section[1].find_next("div", attrs={"class": "col-10"}).find_all("a"):
+            red_picks.append(int(pick['href'].split("/")[3]))
 
-        # INSERT INTO GAME_TEAMS_PICKS () for each GAME ID and TEAM ID
+        # INSERT INTO GAME_TEAMS_PICKS (28463, '1109'): (0, 0, 119, 149, 75, 151, 4, 139, 96, 68, 134, 120)
+        # for each GAME ID and TEAM ID
         # blue team 1, red team 0  and  win is 1 and loss is 0
         result = {"WIN": 1, "LOSS": 0}
-        game_teams_picks_data[[game[0], blue_team_id]] = ("1", result[blue_team[2].replace(" - ", "")], )
+        game_teams_picks_data[(game[0], blue_team_id)] = (
+                1,
+                result[blue_team[2].replace("-", "").replace(" ", "")],
+                *blue_picks,
+                *blue_bans)
+        game_teams_picks_data[(game[0], red_team_id)] = (
+                0,
+                result[red_team[2].replace("-", "").replace(" ", "")],
+                *red_picks,
+                *red_bans)
 
+        # now to load enhanced stats from other page tab
+        link = "https://gol.gg/game/stats/%s/page-fullstats/" % game[0]
+        html_content = requests.get(link).text
+        soup = BeautifulSoup(html_content, "lxml")
 
-        #print(result[])
-        #print(red_team[2].replace(" - ", ""))
+        # INSERT INTO GAME_TEAMS_STATS (28463, '1109'): (0)
+        # for each GAME ID and TEAM ID
+        match_stats_table = soup.find("table", attrs={"class": "completestats tablesaw"}).find_all("tr")
+        for stat_line in match_stats_table[3:]:
+            stat_line_name = [stat_line.find_all("td")[0].text]
+            stat_line_items = [item.text for item in stat_line.find_all("td")[1:]]
+            game_teams_stats_data[(game[0], blue_team_id, stat_line_name[0])] = (*stat_line_items[:5],)
+            game_teams_stats_data[(game[0], red_team_id, stat_line_name[0])] = (*stat_line_items[5:],)
+
         break
     break
 
-print(team_data)
-print(champions_data)
-print(game_data)
+# Now to instert into respective tables
+for key, val in game_data.items():
+    print(key, val)
+for key, val in team_data.items():
+    print(key, val)
+for key, val in game_teams_picks_data.items():
+    print(key, val)
+for key, val in game_teams_stats_data.items():
+    print(key, val)
