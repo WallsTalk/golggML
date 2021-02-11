@@ -13,6 +13,7 @@ game_data = {}
 game_teams_picks_data = {}
 game_teams_stats_data = {}
 for league, games in list_of_games.items():
+    print(league)
     for game in games:
         link = "https://gol.gg/game/stats/%s/page-game/" % game[0]
         html_content = requests.get(link).text
@@ -50,7 +51,6 @@ for league, games in list_of_games.items():
             blue_bans.append(int(ban['href'].split("/")[3]))
         for ban in bans_section[1].find_next("div", attrs={"class": "col-10"}).find_all("a"):
             red_bans.append(int(ban['href'].split("/")[3]))
-
         for pick in picks_section[0].find_next("div", attrs={"class": "col-10"}).find_all("a"):
             blue_picks.append(int(pick['href'].split("/")[3]))
         for pick in picks_section[1].find_next("div", attrs={"class": "col-10"}).find_all("a"):
@@ -76,7 +76,7 @@ for league, games in list_of_games.items():
         html_content = requests.get(link).text
         soup = BeautifulSoup(html_content, "lxml")
 
-        # INSERT INTO GAME_TEAMS_STATS (28463, '1109'): (0)
+        # INSERT INTO GAME_TEAMS_STATS (28463, '1105', "CS in Team's Jungle") ('5', '95', '16', '23', '0')
         # for each GAME ID and TEAM ID
         match_stats_table = soup.find("table", attrs={"class": "completestats tablesaw"}).find_all("tr")
         for stat_line in match_stats_table[3:]:
@@ -85,15 +85,27 @@ for league, games in list_of_games.items():
             game_teams_stats_data[(game[0], blue_team_id, stat_line_name[0])] = (*stat_line_items[:5],)
             game_teams_stats_data[(game[0], red_team_id, stat_line_name[0])] = (*stat_line_items[5:],)
 
-        break
-    break
 
-# Now to instert into respective tables
-for key, val in game_data.items():
-    print(key, val)
-for key, val in team_data.items():
-    print(key, val)
-for key, val in game_teams_picks_data.items():
-    print(key, val)
-for key, val in game_teams_stats_data.items():
-    print(key, val)
+# adding to files to insert into respective tables
+path_for_data = "data_for_tables\\"
+with open(path_for_data + "game_data.txt", "w") as games_data_file:
+    games_data_file.write(str(game_data))
+
+with open(path_for_data + "team_data.txt", "w") as team_data_file:
+    team_data_file.write(str(team_data))
+
+with open(path_for_data + "game_teams_picks_data.txt", "w") as game_teams_picks_data_file:
+    game_teams_picks_data_file.write(str(game_teams_picks_data))
+
+with open(path_for_data + "game_teams_stats_data.txt", "w") as game_teams_stats_data_file:
+    game_teams_stats_data_file.write(str(game_teams_stats_data))
+
+
+# for key, val in game_data.items():
+#     print(key, val)
+# for key, val in team_data.items():
+#     print(key, val)
+# for key, val in game_teams_picks_data.items():
+#     print(key, val)
+# for key, val in game_teams_stats_data.items():
+#     print(key, val)
