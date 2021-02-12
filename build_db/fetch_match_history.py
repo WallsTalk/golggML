@@ -1,8 +1,11 @@
 import requests
 from bs4 import BeautifulSoup
+import json
+import os
 
+
+print("Fetching match history.")
 league_list = ['LPL', 'LEC', 'LCK', 'LCS']
-
 list_of_games = {}
 for league in league_list:
     list_of_games[league] = []
@@ -26,5 +29,7 @@ for league in league_list:
                 game_id += 1
                 num_of_games -= 1
 
-with open("list_of_games.txt", "w") as games_list_file:
-    games_list_file.write('"' + str(list_of_games) + '"')
+print("Saving match history to json.")
+path_for_data = os.path.join("build_db", "list_of_games.json")
+with open(path_for_data, "w") as games_list_file:
+    json.dump(list_of_games, games_list_file)

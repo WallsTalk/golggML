@@ -3,18 +3,21 @@ from bs4 import BeautifulSoup
 import requests
 import os
 
+print("Reading list of games.")
 # Now we have a whole list of games
 # Let's fill db for each game create a tuple and insert
-with open("list_of_games.txt", "r") as games_list_file:
+with open("list_of_games.json", "r") as games_list_file:
     list_of_games = json.loads(games_list_file.read().replace("'", '"'))
 
 #  dicts for tables maped by id of row and object of table
-team_data = {}
-game_data = {}
-game_teams_picks_data = {}
-game_teams_stats_data = {}
+all_data = {
+    "team": {},
+    "game": {},
+    "game_teams_picks": {},
+    "game_teams_stats": {}
+}
 for league, games in list_of_games.items():
-    print(league)
+    print("Fetching stats stats for " + league)
     for game in games:
         link = "https://gol.gg/game/stats/%s/page-game/" % game[0]
         html_content = requests.get(link).text
@@ -24,11 +27,11 @@ for league, games in list_of_games.items():
         game_time = soup.find("div", attrs={"class": "col-6 text-center"}).contents[3].contents[0]
         blue_team = soup.find("div", attrs={"class": "col-12 blue-line-header"}).contents
         red_team = soup.find("div", attrs={"class": "col-12 red-line-header"}).contents
-        blue_team_id = blue_team[1]['href'].split("/")[3]
-        red_team_id = red_team[1]['href'].split("/")[3]
+        blue_team_id = int(blue_team[1]['href'].split("/")[3])
+        red_team_id = int(red_team[1]['href'].split("/")[3])
 
         # INSERT INTO GAME game_data =(27847, '2021-01-24', '11.1', '32:00', '1153', '1152') FOR EACH id
-        game_data[game[0]] = (
+        all_data["game"][game[0]] = (
             game[1],
             game[2],
             game_time,
@@ -36,10 +39,10 @@ for league, games in list_of_games.items():
             red_team_id)
 
         # INSERT INTO TEAMS ('1153', 'Misfits Gaming', 'LEC'), ('1152', 'MAD Lions', 'LEC')  FOR EACH ID
-        if blue_team_id not in team_data.keys():
-            team_data[blue_team_id] = (blue_team[1].text, league)
-        if red_team_id not in team_data.keys():
-            team_data[red_team_id] = (red_team[1].text, league)
+        if blue_team_id not in all_data["team"].keys():
+            all_data["team"][blue_team_id] = (blue_team[1].text, league)
+        if red_team_id not in all_data["team"].keys():
+            all_data["team"][red_team_id] = (red_team[1].text, league)
 
         # getting picks and bans for eatch team
         blue_bans = []
@@ -61,12 +64,12 @@ for league, games in list_of_games.items():
         # for each GAME ID and TEAM ID
         # blue team 1, red team 0  and  win is 1 and loss is 0
         result = {"WIN": 1, "LOSS": 0}
-        game_teams_picks_data[(game[0], blue_team_id)] = (
+        all_data["game_teams_picks"][str((game[0], blue_team_id))] = (
                 1,
                 result[blue_team[2].replace("-", "").replace(" ", "")],
                 *blue_picks,
                 *blue_bans)
-        game_teams_picks_data[(game[0], red_team_id)] = (
+        all_data["game_teams_picks"][str((game[0], red_team_id))] = (
                 0,
                 result[red_team[2].replace("-", "").replace(" ", "")],
                 *red_picks,
@@ -83,27 +86,16 @@ for league, games in list_of_games.items():
         for stat_line in match_stats_table[3:]:
             stat_line_name = [stat_line.find_all("td")[0].text]
             stat_line_items = [item.text for item in stat_line.find_all("td")[1:]]
-            game_teams_stats_data[str((game[0], blue_team_id, stat_line_name[0]))] = (*stat_line_items[:5],)
-            game_teams_stats_data[str((game[0], red_team_id, stat_line_name[0]))] = (*stat_line_items[5:],)
+            all_data["game_teams_stats"][str((game[0], blue_team_id, stat_line_name[0]))] = (*stat_line_items[:5],)
+            all_data["game_teams_stats"][str((game[0], red_team_id, stat_line_name[0]))] = (*stat_line_items[5:],)
         break
-    break
 
-
+print("Writing stats to json.")
 # adding to files to insert into respective tables
-path_for_data = "data_for_tables"
-# with open(path_for_data + "game_data.txt", "w") as games_data_file:
-#     games_data_file.write(str(game_data))
-#
-# with open(path_for_data + "team_data.txt", "w") as team_data_file:
-#     team_data_file.write(str(team_data))
-#
-# with open(path_for_data + "game_teams_picks_data.txt", "w") as game_teams_picks_data_file:
-#     game_teams_picks_data_file.write(str(game_teams_picks_data))
-
-with open(os.path.join(path_for_data, "game_teams_stats_data.json"), "w") as game_teams_stats_data_file:
-    json.dump(game_teams_stats_data, game_teams_stats_data_file)
-    #game_teams_stats_data_file.write(str(game_teams_stats_data))
-
+path_for_data = os.path.join("build_db", "data_for_tables")
+for table, data in all_data.items():
+    with open(os.path.join(path_for_data, table + ".json"), "w") as data_file:
+        json.dump(all_data[table], data_file)
 
 # for key, val in game_data.items():
 #     print(key, val)

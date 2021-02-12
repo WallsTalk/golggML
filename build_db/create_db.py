@@ -1,12 +1,14 @@
 import sqlite3
+import os
 
-
-sqlite3.connect('stats.db')
-conn = sqlite3.connect('stats.db')
+path_to_db = os.path.join("ML", "stats.db")
+conn = sqlite3.connect(path_to_db)
 c = conn.cursor()
 
 # Create tables
-with open("queries.sql", "r") as queries_file:
+print("Creating tables.")
+path_to_queries = os.path.join("build_db", "queries.sql")
+with open(path_to_queries, "r") as queries_file:
     queries = queries_file.read().split(";")
     list(map(lambda query: c.execute(query + ";"), queries))
     conn.commit()
