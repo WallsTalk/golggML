@@ -1,6 +1,7 @@
 import json
 from bs4 import BeautifulSoup
 import requests
+import os
 
 # Now we have a whole list of games
 # Let's fill db for each game create a tuple and insert
@@ -82,23 +83,26 @@ for league, games in list_of_games.items():
         for stat_line in match_stats_table[3:]:
             stat_line_name = [stat_line.find_all("td")[0].text]
             stat_line_items = [item.text for item in stat_line.find_all("td")[1:]]
-            game_teams_stats_data[(game[0], blue_team_id, stat_line_name[0])] = (*stat_line_items[:5],)
-            game_teams_stats_data[(game[0], red_team_id, stat_line_name[0])] = (*stat_line_items[5:],)
+            game_teams_stats_data[str((game[0], blue_team_id, stat_line_name[0]))] = (*stat_line_items[:5],)
+            game_teams_stats_data[str((game[0], red_team_id, stat_line_name[0]))] = (*stat_line_items[5:],)
+        break
+    break
 
 
 # adding to files to insert into respective tables
-path_for_data = "data_for_tables\\"
-with open(path_for_data + "game_data.txt", "w") as games_data_file:
-    games_data_file.write(str(game_data))
+path_for_data = "data_for_tables"
+# with open(path_for_data + "game_data.txt", "w") as games_data_file:
+#     games_data_file.write(str(game_data))
+#
+# with open(path_for_data + "team_data.txt", "w") as team_data_file:
+#     team_data_file.write(str(team_data))
+#
+# with open(path_for_data + "game_teams_picks_data.txt", "w") as game_teams_picks_data_file:
+#     game_teams_picks_data_file.write(str(game_teams_picks_data))
 
-with open(path_for_data + "team_data.txt", "w") as team_data_file:
-    team_data_file.write(str(team_data))
-
-with open(path_for_data + "game_teams_picks_data.txt", "w") as game_teams_picks_data_file:
-    game_teams_picks_data_file.write(str(game_teams_picks_data))
-
-with open(path_for_data + "game_teams_stats_data.txt", "w") as game_teams_stats_data_file:
-    game_teams_stats_data_file.write(str(game_teams_stats_data))
+with open(os.path.join(path_for_data, "game_teams_stats_data.json"), "w") as game_teams_stats_data_file:
+    json.dump(game_teams_stats_data, game_teams_stats_data_file)
+    #game_teams_stats_data_file.write(str(game_teams_stats_data))
 
 
 # for key, val in game_data.items():
