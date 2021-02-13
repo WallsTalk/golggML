@@ -23,7 +23,7 @@ for table, data in all_data.items():
 		key_list = key.replace("(", "").replace(")", "").replace(" ", "").replace("'", "").split(",")
 		values = tuple(key_list + row)
 
-		c.execute("INSERT INTO %s VALUES %s", (table, values))
+		c.execute("INSERT INTO %s VALUES %s" % (table, values))
 		break
 	conn.commit()
 conn.close()
