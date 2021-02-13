@@ -19,7 +19,7 @@ CREATE TABLE IF NOT EXISTS game_teams_picks (
 	ban_1 integer,
 	ban_2 integer,
 	ban_3 integer,
-	ban_4 integer
+	ban_4 integer,
 	ban_5 integer
 );
 CREATE TABLE IF NOT EXISTS game_teams_stats (

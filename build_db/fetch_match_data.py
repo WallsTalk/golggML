@@ -3,10 +3,13 @@ from bs4 import BeautifulSoup
 import requests
 import os
 
+#root project dir
+root = os.path.abspath(os.path.join(__file__, os.pardir, os.pardir))
+
 print("Reading list of games.")
 # Now we have a whole list of games
 # Let's fill db for each game create a tuple and insert
-path_to_list_of_games = os.path.join("build_db", "list_of_games.json")
+path_to_list_of_games = os.path.join(root, "build_db", "list_of_games.json")
 with open(path_to_list_of_games, "r") as games_list_file:
     list_of_games = json.loads(games_list_file.read().replace("'", '"'))
 
@@ -93,7 +96,7 @@ for league, games in list_of_games.items():
 
 print("Writing stats to json.")
 # adding to files to insert into respective tables
-path_for_data = os.path.join("build_db", "data_for_tables")
+path_for_data = os.path.join(root, "build_db", "data_for_tables")
 for table, data in all_data.items():
     with open(os.path.join(path_for_data, table + ".json"), "w") as data_file:
         json.dump(all_data[table], data_file)

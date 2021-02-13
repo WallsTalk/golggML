@@ -29,7 +29,9 @@ for league in league_list:
                 game_id += 1
                 num_of_games -= 1
 
+#root project dir
+root = os.path.abspath(os.path.join(__file__, os.pardir, os.pardir))
 print("Saving match history to json.")
-path_for_data = os.path.join("build_db", "list_of_games.json")
+path_for_data = os.path.join(root, "build_db", "list_of_games.json")
 with open(path_for_data, "w") as games_list_file:
     json.dump(list_of_games, games_list_file)
