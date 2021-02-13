@@ -3,10 +3,10 @@ from bs4 import BeautifulSoup
 import requests
 import os
 
-#root project dir
+
+# Root project dir
 root = os.path.abspath(os.path.join(__file__, os.pardir, os.pardir))
 
-print("Reading list of games.")
 # Now we have a whole list of games
 # Let's fill db for each game create a tuple and insert
 path_to_list_of_games = os.path.join(root, "build_db", "list_of_games.json")
@@ -17,11 +17,11 @@ with open(path_to_list_of_games, "r") as games_list_file:
 all_data = {
     "team": {},
     "game": {},
-    "game_teams_picks": {},
-    "game_teams_stats": {}
+    "game_team_picks": {},
+    "game_team_stats": {}
 }
 for league, games in list_of_games.items():
-    print("Fetching stats stats for " + league)
+    print("Fetching stats for " + league + " ...")
     for game in games:
         link = "https://gol.gg/game/stats/%s/page-game/" % game[0]
         html_content = requests.get(link).text
@@ -68,12 +68,12 @@ for league, games in list_of_games.items():
         # for each GAME ID and TEAM ID
         # blue team 1, red team 0  and  win is 1 and loss is 0
         result = {"WIN": 1, "LOSS": 0}
-        all_data["game_teams_picks"][str((game[0], blue_team_id))] = (
+        all_data["game_team_picks"][str((game[0], blue_team_id))] = (
                 1,
                 result[blue_team[2].replace("-", "").replace(" ", "")],
                 *blue_picks,
                 *blue_bans)
-        all_data["game_teams_picks"][str((game[0], red_team_id))] = (
+        all_data["game_team_picks"][str((game[0], red_team_id))] = (
                 0,
                 result[red_team[2].replace("-", "").replace(" ", "")],
                 *red_picks,
@@ -90,22 +90,14 @@ for league, games in list_of_games.items():
         for stat_line in match_stats_table[3:]:
             stat_line_name = [stat_line.find_all("td")[0].text]
             stat_line_items = [item.text for item in stat_line.find_all("td")[1:]]
-            all_data["game_teams_stats"][str((game[0], blue_team_id, stat_line_name[0]))] = (*stat_line_items[:5],)
-            all_data["game_teams_stats"][str((game[0], red_team_id, stat_line_name[0]))] = (*stat_line_items[5:],)
+            all_data["game_team_stats"][str((game[0], blue_team_id, stat_line_name[0]))] = (*stat_line_items[:5],)
+            all_data["game_team_stats"][str((game[0], red_team_id, stat_line_name[0]))] = (*stat_line_items[5:],)
+        break
 
 
-print("Writing stats to json.")
 # adding to files to insert into respective tables
 path_for_data = os.path.join(root, "build_db", "data_for_tables")
 for table, data in all_data.items():
     with open(os.path.join(path_for_data, table + ".json"), "w") as data_file:
         json.dump(all_data[table], data_file)
-
-# for key, val in game_data.items():
-#     print(key, val)
-# for key, val in team_data.items():
-#     print(key, val)
-# for key, val in game_teams_picks_data.items():
-#     print(key, val)
-# for key, val in game_teams_stats_data.items():
-#     print(key, val)
+print("Saved stats to json.")

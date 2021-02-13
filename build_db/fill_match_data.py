@@ -2,11 +2,11 @@ import json
 import sqlite3
 import os
 
-#root project dir
+
+# Root project dir
 root = os.path.abspath(os.path.join(__file__, os.pardir, os.pardir))
 
 # Reading from files into dict
-print("Reading data for tables from json.")
 path_for_data = os.path.join(root, "build_db", "data_for_tables")
 all_data = {}
 for file in os.listdir(path_for_data):
@@ -24,7 +24,6 @@ for table, data in all_data.items():
 		values = tuple(key_list + row)
 
 		c.execute("INSERT INTO %s VALUES %s" % (table, values))
-		break
 	conn.commit()
 conn.close()
-
+print("Values transferred from json to database.")

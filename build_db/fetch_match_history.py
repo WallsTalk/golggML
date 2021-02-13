@@ -2,9 +2,22 @@ import requests
 from bs4 import BeautifulSoup
 import json
 import os
+import sqlite3
 
 
-print("Fetching match history.")
+# First check the latest matches in the stats.db
+
+# Root path
+root = os.path.abspath(os.path.join(__file__, os.pardir, os.pardir))
+path_to_db = os.path.join(root, "ML", "stats.db")
+
+conn = sqlite3.connect(path_to_db)
+c = conn.cursor()
+# To do
+newest_game_date = "1990-12-24"
+conn.close()
+
+print("Fetching match history from " + newest_game_date + " ...")
 league_list = ['LPL', 'LEC', 'LCK', 'LCS']
 list_of_games = {}
 for league in league_list:
@@ -29,9 +42,8 @@ for league in league_list:
                 game_id += 1
                 num_of_games -= 1
 
-#root project dir
-root = os.path.abspath(os.path.join(__file__, os.pardir, os.pardir))
-print("Saving match history to json.")
+# Root project dir
 path_for_data = os.path.join(root, "build_db", "list_of_games.json")
 with open(path_for_data, "w") as games_list_file:
     json.dump(list_of_games, games_list_file)
+print("Saved match history to json.")
