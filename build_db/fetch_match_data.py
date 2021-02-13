@@ -6,7 +6,8 @@ import os
 print("Reading list of games.")
 # Now we have a whole list of games
 # Let's fill db for each game create a tuple and insert
-with open("list_of_games.json", "r") as games_list_file:
+path_to_list_of_games = os.path.join("build_db", "list_of_games.json")
+with open(path_to_list_of_games, "r") as games_list_file:
     list_of_games = json.loads(games_list_file.read().replace("'", '"'))
 
 #  dicts for tables maped by id of row and object of table
@@ -88,7 +89,7 @@ for league, games in list_of_games.items():
             stat_line_items = [item.text for item in stat_line.find_all("td")[1:]]
             all_data["game_teams_stats"][str((game[0], blue_team_id, stat_line_name[0]))] = (*stat_line_items[:5],)
             all_data["game_teams_stats"][str((game[0], red_team_id, stat_line_name[0]))] = (*stat_line_items[5:],)
-        break
+
 
 print("Writing stats to json.")
 # adding to files to insert into respective tables
