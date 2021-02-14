@@ -5,19 +5,19 @@ import os
 import sqlite3
 
 
-# First check the latest matches in the stats.db
-
 # Root path
 root = os.path.abspath(os.path.join(__file__, os.pardir, os.pardir))
 path_to_db = os.path.join(root, "ML", "stats.db")
 
+# Check existing game_ids in stats.db
 conn = sqlite3.connect(path_to_db)
 c = conn.cursor()
-# To do
-newest_game_date = "1990-12-24"
+existing_games = [game_id[0] for game_id in c.execute("SELECT game_id FROM game;").fetchall()]
+print(existing_games)
 conn.close()
 
-print("Fetching match history from " + newest_game_date + " ...")
+
+print("Fetching match history ...")
 league_list = ['LPL', 'LEC', 'LCK', 'LCS']
 list_of_games = {}
 for league in league_list:
@@ -37,10 +37,14 @@ for league in league_list:
 
             # For each game in the series id goes up + 1
             game_id = int(tr.contents[0].contents[0]['href'].split("/")[3])
-            while num_of_games > 0:
-                list_of_games[league].append([game_id, tr.contents[6].contents[0], tr.contents[5].contents[0]])
-                game_id += 1
-                num_of_games -= 1
+            print(game_id, existing_games)
+            if game_id not in existing_games:
+                while num_of_games > 0:
+                    list_of_games[league].append([game_id, tr.contents[6].contents[0], tr.contents[5].contents[0]])
+                    game_id += 1
+                    num_of_games -= 1
+            else:
+                print(game_id)
 
 # Root project dir
 path_for_data = os.path.join(root, "build_db", "list_of_games.json")
