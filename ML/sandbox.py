@@ -7,8 +7,10 @@ path_to_db = os.path.join(root, "ML", "stats.db")
 conn = sqlite3.connect(path_to_db)
 c = conn.cursor()
 
-latest_games = [game_id[0] for game_id in c.execute("SELECT game_id FROM game;").fetchall()]
+#latest_games = [game_id[0] for game_id in c.execute("SELECT game_id FROM game;").fetchall()]
+output = c.execute("SELECT * FROM game;").fetchall()
+for item in output:
 
-print(latest_games)
+    print(item)
 
 conn.close()

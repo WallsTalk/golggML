@@ -29,27 +29,24 @@ for table, data in all_data.items():
 			values = tuple(key_list + row)
 			c.execute("INSERT INTO %s VALUES %s" % (table, values))
 		except Exception as e:
-			if key_list[0] not in failed_data[table].keys():
-				failed_data[table][key_list[0]] = [(key_list, values, e)]
-			else:
-				failed_data[table][key_list[0]].append((key_list, values, e))
+			if table != "team":
+				if key_list[0] not in failed_data[table].keys():
+					failed_data[table][key_list[0]] = [(key_list, values, e)]
+				else:
+					failed_data[table][key_list[0]].append((key_list, values, e))
 
 	conn.commit()
+conn.close()
 print("Values transferred from json to database.")
 
 
-# Log errors and remove corrupted data
+# Log errors
 logs_path = os.path.join(root, "build_db", "logs.log")
 with open(logs_path, "w") as logs:
 	logs.write(str(datetime.now()) + "\n")
 	for table, game_ids in failed_data.items():
-		logs.write(table + " corrupted games count: " + str(len(game_ids)) + "\n")
+		logs.write(table + " | Corrupted games count in tables: " + str(len(game_ids)) + "\n")
 		for game_id, values in game_ids.items():
 			logs.write(str(game_id) + "\n")
 			logs.write(str(values) + "\n")
-			c.execute("DELETE FROM game WHERE game_id = %s" % (game_id,))
-			c.execute("DELETE FROM game_team_picks WHERE game_id = %s" % (game_id,))
-			c.execute("DELETE FROM game_team_stats WHERE game_id = %s" % (game_id,))
-		conn.commit()
-conn.close()
-print("Logged errors and deleted data for corrupted games.")
+print("Logged errors.")
