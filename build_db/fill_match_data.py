@@ -21,7 +21,6 @@ conn = sqlite3.connect(path_to_db)
 c = conn.cursor()
 
 
-
 # If insertion fails we should save all game ID's and then remove data for tehse games
 for table, data in all_data.items():
 	for key, row in data.items():
@@ -36,19 +35,21 @@ for table, data in all_data.items():
 				failed_data[table][key_list[0]].append((key_list, values, e))
 
 	conn.commit()
-conn.close()
-
 print("Values transferred from json to database.")
 
 
+# Log errors and remove corrupted data
 logs_path = os.path.join(root, "build_db", "logs.log")
 with open(logs_path, "w") as logs:
 	logs.write(str(datetime.now()) + "\n")
 	for table, game_ids in failed_data.items():
-		logs.write(table + " corrupted games count: " + str(len(game_ids)) +"\n")
+		logs.write(table + " corrupted games count: " + str(len(game_ids)) + "\n")
 		for game_id, values in game_ids.items():
 			logs.write(str(game_id) + "\n")
 			logs.write(str(values) + "\n")
-
+			c.execute("DELETE FROM game WHERE game_id = %s" % (game_id,))
+			c.execute("DELETE FROM game_team_picks WHERE game_id = %s" % (game_id,))
+			c.execute("DELETE FROM game_team_stats WHERE game_id = %s" % (game_id,))
+		conn.commit()
+conn.close()
 print("Logged errors and deleted data for corrupted games.")
-
