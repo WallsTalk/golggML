@@ -92,8 +92,6 @@ for league, games in list_of_games.items():
             stat_line_items = [item.text for item in stat_line.find_all("td")[1:]]
             all_data["game_team_stats"][str((game[0], blue_team_id, stat_line_name[0]))] = (*stat_line_items[:5],)
             all_data["game_team_stats"][str((game[0], red_team_id, stat_line_name[0]))] = (*stat_line_items[5:],)
-        break
-
 
 # adding to files to insert into respective tables
 path_for_data = os.path.join(root, "build_db", "data_for_tables")

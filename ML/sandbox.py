@@ -1,7 +1,7 @@
 import sqlite3
 import os
 
-#root project dir
+# Root project dir
 root = os.path.abspath(os.path.join(__file__, os.pardir, os.pardir))
 path_to_db = os.path.join(root, "ML", "stats.db")
 conn = sqlite3.connect(path_to_db)

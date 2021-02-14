@@ -13,7 +13,7 @@ path_to_db = os.path.join(root, "ML", "stats.db")
 conn = sqlite3.connect(path_to_db)
 c = conn.cursor()
 existing_games = [game_id[0] for game_id in c.execute("SELECT game_id FROM game;").fetchall()]
-print(existing_games)
+print(str(len(existing_games)) + " games found in stats.db")
 conn.close()
 
 
@@ -37,14 +37,11 @@ for league in league_list:
 
             # For each game in the series id goes up + 1
             game_id = int(tr.contents[0].contents[0]['href'].split("/")[3])
-            print(game_id, existing_games)
             if game_id not in existing_games:
                 while num_of_games > 0:
                     list_of_games[league].append([game_id, tr.contents[6].contents[0], tr.contents[5].contents[0]])
                     game_id += 1
                     num_of_games -= 1
-            else:
-                print(game_id)
 
 # Root project dir
 path_for_data = os.path.join(root, "build_db", "list_of_games.json")
