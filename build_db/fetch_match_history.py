@@ -37,14 +37,16 @@ for league in league_list:
 
             # For each game in the series id goes up + 1
             game_id = int(tr.contents[0].contents[0]['href'].split("/")[3])
-            if game_id not in existing_games:
-                while num_of_games > 0:
+            while num_of_games > 0:
+                if game_id not in existing_games:
                     list_of_games[league].append([game_id, tr.contents[6].contents[0], tr.contents[5].contents[0]])
-                    game_id += 1
-                    num_of_games -= 1
+                game_id += 1
+                num_of_games -= 1
 
 # Root project dir
 path_for_data = os.path.join(root, "build_db", "list_of_games.json")
 with open(path_for_data, "w") as games_list_file:
     json.dump(list_of_games, games_list_file)
+for league, matches in list_of_games.items():
+    print(str(len(matches)) + " new matches found in " + league)
 print("Saved match history to json.")

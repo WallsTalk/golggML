@@ -42,7 +42,7 @@ print("Values transferred from json to database.")
 
 # Log errors
 logs_path = os.path.join(root, "build_db", "logs.log")
-with open(logs_path, "w") as logs:
+with open(logs_path, "a") as logs:
 	logs.write(str(datetime.now()) + "\n")
 	for table, game_ids in failed_data.items():
 		logs.write(table + " | Corrupted games count in tables: " + str(len(game_ids)) + "\n")
