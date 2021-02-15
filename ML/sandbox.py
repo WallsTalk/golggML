@@ -8,7 +8,7 @@ conn = sqlite3.connect(path_to_db)
 c = conn.cursor()
 
 #latest_games = [game_id[0] for game_id in c.execute("SELECT game_id FROM game;").fetchall()]
-output = c.execute("SELECT * FROM game;").fetchall()
+output = c.execute("SELECT count(*) FROM game_team_stats;").fetchall()
 for item in output:
 
     print(item)
