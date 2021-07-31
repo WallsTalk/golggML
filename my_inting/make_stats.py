@@ -28,8 +28,8 @@ que_type = {
     440: 0
 }
 draft = {
-    "my_team": "Ezreal,Malaphite,Evelynn,Karma".split(","),
-    "enemy_team": "Pantheon,Kindred,Jhin,Kayle,Sona".split(",")
+    "my_team": "".split(","),
+    "enemy_team": "".split(",")
 }
 for match in list_of_matches:
     match_data = json.loads(match[1])
@@ -49,34 +49,46 @@ for match in list_of_matches:
             if win == participant["win"]:
                 if champion in draft["my_team"]:
                     if champion not in champion_data["with"].keys():
-                        champion_data["with"][champion] = {True: 0, False: 0}
-                    champion_data["with"][champion][win] += 1
+                        champion_data["with"][champion] = {"wr": {True: 0, False: 0}, "rec": []}
+                    champion_data["with"][champion]["wr"][win] += 1
+                    champion_data["with"][champion]["rec"].append(int(win))
             else:
                 if champion in draft["enemy_team"]:
                     if champion not in champion_data["against"].keys():
-                        champion_data["against"][champion] = {True: 0, False: 0}
-                    champion_data["against"][champion][win] += 1
+                        champion_data["against"][champion] = {"wr": {True: 0, False: 0}, "rec": []}
+                    champion_data["against"][champion]["wr"][win] += 1
+                    champion_data["against"][champion]["rec"].append(int(win))
 
 conn.close()
 
 list_with = []
 list_against = []
 for champ, stats in champion_data["with"].items():
-    list_with.append((champ, sum(stats.values()), round(stats[True]/sum(stats.values()), 2)))
+    list_with.append((champ, sum(stats["wr"].values()), round(stats["wr"][True]/sum(stats["wr"].values()), 2), stats["rec"][-10:]))
 
 for champ, stats in champion_data["against"].items():
-    list_against.append((champ, sum(stats.values()), round(stats[True]/sum(stats.values()), 2)))
+    list_against.append((champ, sum(stats["wr"].values()), round(stats["wr"][True]/sum(stats["wr"].values()), 2), stats["rec"][-10:]))
 
 
-list_with = sorted(list_with, key=lambda x: x[2])
 for item in list_with:
     print(item)
-
-print("\n############################################\n")
-
-list_against = sorted(list_against, key=lambda x: x[2])
+print(round(sum([wr[2] for wr in list_with])/len(list_with), 2))
 for item in list_against:
     print(item)
+print(round(
+    sum([wr[2] for wr in list_against])/len(list_against), 2
+    ))
+
+
+# list_with = sorted(list_with, key=lambda x: x[2])
+# for item in list_with:
+#     print(item)
+
+# print("\n############################################\n")
+
+# list_against = sorted(list_against, key=lambda x: x[2])
+# for item in list_against:
+#     print(item)
 
 print(count)
 print(que_type)
