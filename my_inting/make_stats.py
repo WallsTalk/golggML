@@ -23,10 +23,10 @@ count = 0
 
 
 # Here specify what champs are locked in champ select
-options = "Cassiopeia,Lulu,Rengar,Kaisa,Vladimir,Ziggs,Vayne,TahmKench,Viego,Zac,Jhin,Talon,Vladimir,Sylas,Irelia,Seraphine,Kaisa,LeeSin,Katarina,Irelia,Zyra,XinZhao,Varus,Darius,Kassadin,Akshan,LeeSin,Ziggs,Soraka,Irelia,Darius,Kindred,Lucian,Kayn,Kaisa,Camille,Lulu,Kaisa,Orianna,MasterYi,XinZhao,LeeSin,Malphite,Sivir,Kayle,Khazix,Leblanc,Nasus,Lillia,Diana,Draven,Yuumi,Wukong,Akali,Diana,Ezreal,Graves,Jhin,TahmKench,Thresh,Garen,XinZhao,Leblanc,Samira,Janna,Vayne,Yasuo,Neeko,Kaisa,Nocturne,Camille,Qiyana,Mordekaiser,Samira,Nasus,Khazix,Seraphine,Nami"
+options = "Heimerdinger,Volibear,Kaisa,Malphite,Gragas,Lux,Jhin,Trundle,Thresh,Shaco,Shen,Yasuo,Twitch,Zyra,Graves,Talon,Kennen,Jinx,Jhin,Akshan,Karma,Teemo,Gwen,Kennen,RekSai,Yorick,Ezreal,Karma,Shaco,Akali,Sion,Ezreal,Lucian,Kindred,Azir,Caitlyn,Lux,XinZhao,DrMundo,Samira,Kassadin,Tristana,Ahri,Graves,TahmKench,Ezreal,XinZhao,Vladimir,Morgana,Renekton,Urgot,Varus,Irelia,Diana,Rakan,Twitch,Vladimir,Malphite,Trundle,Kayn,Ahri,Yone,Tristana,Volibear,Zed,Nautilus,Jhin,Aatrox,MasterYi,Samira,Gwen,Leblanc,Teemo,Ahri,LeeSin,Ezreal,Lulu,Nunu,Ahri,Riven,XinZhao,Leblanc,Kindred,Karma,Caitlyn,Tristana,Taric,JarvanIV,Fiora,Fizz,Katarina,Twitch,LeeSin,Karma,Thresh,Akshan,Zac,Nasus,Nidalee,Syndra,Amumu,Gnar,Lulu,Ziggs,Tristana,Diana,Caitlyn,Poppy,Nidalee,Irelia,Caitlyn,Morgana,XinZhao,Lucian,Camille,Ornn,Jinx,Akali,Cassiopeia,Lulu,Rengar,Kaisa,Vladimir,Ziggs,Vayne,TahmKench,Viego,Zac,Jhin,Talon,Vladimir,Sylas,Irelia,Seraphine,Kaisa,LeeSin,Katarina,Irelia,Zyra,XinZhao,Varus,Darius,Kassadin,Akshan,LeeSin,Ziggs,Soraka,Irelia,Darius,Kindred,Lucian,Kayn,Kaisa,Camille,Lulu,Kaisa,Orianna,MasterYi,XinZhao,LeeSin,Malphite,Sivir,Kayle,Khazix,Leblanc,Nasus,Lillia,Diana,Draven,Yuumi,Wukong,Akali,Diana,Ezreal,Graves,Jhin,TahmKench,Thresh,Garen,XinZhao,Leblanc,Samira,Janna,Vayne,Yasuo,Neeko,Kaisa,Nocturne,Camille,Qiyana,Mordekaiser,Samira,Nasus,Khazix,Seraphine,Nami"
 draft = {
-    "my_team": "Akali".split(","),
-    "enemy_team": "Singed".split(",")
+    "my_team": "".split(","),
+    "enemy_team": "".split(",")
 }
 
 
@@ -138,35 +138,37 @@ for champ, stats in champion_data["with"].items():
 for champ, stats in champion_data["against"].items():
     list_against.append((champ, sum(stats["wr"].values()), round(stats["wr"][True]/sum(stats["wr"].values()), 2), stats["rec"][-5:]))
 
-print("\n#######################################")
-print("######### THIS IS THE REPORT ##########")
-print("#######################################")
+if len(list_with) != 0 and len(list_against) != 0:
+    print("\n\n\n\n#######################################")
+    print("######### THIS IS THE REPORT ##########")
+    print("#######################################")
 
 
-print("\nOUR_TEAM")
-for item in list_with:
-    print(item)
-tips = select_tip(champion_data["with"])
-print("\nGood:\n", tips["Good"])
-print("\nBAD:\n",tips["Bad"])
-print("\nAverage chance: ", round(sum([wr[2] for wr in list_with])/len(list_with), 2))
+    print("\n### OUR_TEAM ###")
+    for item in list_with:
+        print(item)
+    tips = select_tip(champion_data["with"])
+    print("\nGood:\n", tips["Good"])
+    print("\nBAD:\n",tips["Bad"])
+    print("\nAverage chance: ", round(sum([wr[2] for wr in list_with])/len(list_with), 2))
 
 
-print("\n\n\n")  
-print("ENEMY_TEAM")
-for item in list_against:
-    print(item)
+    print("\n")  
+    print("### ENEMY_TEAM ###")
+    for item in list_against:
+        print(item)
 
-tips = select_tip(champion_data["against"])
-print("\nGood:\n", tips["Good"])
-print("\nBAD:\n",tips["Bad"])
-print("\nAverage chance: ", round(sum([wr[2] for wr in list_against])/len(list_against), 2))
+    tips = select_tip(champion_data["against"])
+    print("\nGood:\n", tips["Good"])
+    print("\nBAD:\n",tips["Bad"])
+    print("\nAverage chance: ", round(sum([wr[2] for wr in list_against])/len(list_against), 2))
 
 
-print("\n\n\n")
-print("Total games: ", count)
-print("Games per queue type registered: ", que_type)
-
+    print("\n\n\n")
+    print("Total games: ", count)
+    print("Games per queue type registered: ", que_type)
+else:
+    print("\n### No requested champions ###\n")
 
 
 # list_with = sorted(list_with, key=lambda x: x[2])

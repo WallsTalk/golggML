@@ -6,7 +6,7 @@ import sqlite3
 match_list_by_acc = "https://europe.api.riotgames.com/lol/match/v5/matches/by-puuid/uSeXv-1ss9cJrzBC9ZxEdWvyWLanYqK0ZhnIamsmdLhlqCDdDO9_QEgSLzjXB1-sqx06OceNxCi6LA/ids?type=ranked&start=0&count=100"
 
 header = {
-    "api_key": "RGAPI-7e0eb530-03a7-448f-85a3-65f59f8556e3"
+    "api_key": "RGAPI-95d555b0-7287-4c40-ad61-50baede4772f"
 }
 
 # dict_keys(['id', 'accountId', 'puuid', 'name', 'profileIconId', 'revisionDate', 'summonerLevel'])
