@@ -1,6 +1,8 @@
 import requests
 import json
 
+ #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
+
 # https://developers.pandascore.co/reference/get_lol_teams_teamidorslug_stats
 # https://app.pandascore.co/dashboard/main
 
@@ -40,4 +42,4 @@ with open("leagues.txt", "r") as leagues:
             response = requests.get(url % serie["id"], headers=headers).text
             print(response + "\n")
 
-            
+# https://developers.pandascore.co/reference/get_lol_series_serieidorslug_teams_teamidorslug_stats
