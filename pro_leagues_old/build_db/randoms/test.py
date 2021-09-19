@@ -1,6 +1,7 @@
 import requests
 import json
-
+import os
+import sqlite3
  #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
 
 # https://developers.pandascore.co/reference/get_lol_teams_teamidorslug_stats
@@ -11,6 +12,7 @@ headers = {
     "Accept": "application/json",
     "Authorization": "Bearer cXP58-fafBjtvjkPufepwqtGY4N6xPNZL9bOwP8cwP7LDFo23RE"
 }
+
 
 
 #GET ALL LEAGUES for dataset
@@ -31,15 +33,15 @@ headers = {
 
 
 
-url = "https://api.pandascore.co/lol/series/%s/teams"
-
-with open("leagues.txt", "r") as leagues:
-   leagues_json = json.loads(leagues.read())
-   for league, info in leagues_json.items():
-      info_json = json.loads(info)
-      for serie in info_json["series"]:
-         if "Summer 2021" in serie.values():
-            response = requests.get(url % serie["id"], headers=headers).text
-            print(response + "\n")
+# url = "https://api.pandascore.co/lol/series/%s/teams"
+#
+# with open("leagues.txt", "r") as leagues:
+#    leagues_json = json.loads(leagues.read())
+#    for league, info in leagues_json.items():
+#       info_json = json.loads(info)
+#       for serie in info_json["series"]:
+#          if "Summer 2021" in serie.values():
+#             response = requests.get(url % serie["id"], headers=headers).text
+#             print(response + "\n")
 
 # https://developers.pandascore.co/reference/get_lol_series_serieidorslug_teams_teamidorslug_stats
