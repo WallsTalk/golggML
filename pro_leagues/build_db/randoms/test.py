@@ -1,6 +1,10 @@
 import requests
 import json
 
+# https://developers.pandascore.co/reference/get_lol_teams_teamidorslug_stats
+# https://app.pandascore.co/dashboard/main
+
+
 headers = {
     "Accept": "application/json",
     "Authorization": "Bearer cXP58-fafBjtvjkPufepwqtGY4N6xPNZL9bOwP8cwP7LDFo23RE"
