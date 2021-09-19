@@ -4,7 +4,7 @@ conn = sqlite3.connect("my_inting_data.db")
 
 
 # this method defines match status if I won or Lost
-def win_status(participants):
+def my_win_status(participants):
     puuid = "uSeXv-1ss9cJrzBC9ZxEdWvyWLanYqK0ZhnIamsmdLhlqCDdDO9_QEgSLzjXB1-sqx06OceNxCi6LA"
     for participant in participants:
         if participant["puuid"] == puuid:
@@ -23,7 +23,7 @@ count = 0
 
 
 # Here specify what champs are locked in champ select
-options = "Heimerdinger,Volibear,Kaisa,Malphite,Gragas,Lux,Jhin,Trundle,Thresh,Shaco,Shen,Yasuo,Twitch,Zyra,Graves,Talon,Kennen,Jinx,Jhin,Akshan,Karma,Teemo,Gwen,Kennen,RekSai,Yorick,Ezreal,Karma,Shaco,Akali,Sion,Ezreal,Lucian,Kindred,Azir,Caitlyn,Lux,XinZhao,DrMundo,Samira,Kassadin,Tristana,Ahri,Graves,TahmKench,Ezreal,XinZhao,Vladimir,Morgana,Renekton,Urgot,Varus,Irelia,Diana,Rakan,Twitch,Vladimir,Malphite,Trundle,Kayn,Ahri,Yone,Tristana,Volibear,Zed,Nautilus,Jhin,Aatrox,MasterYi,Samira,Gwen,Leblanc,Teemo,Ahri,LeeSin,Ezreal,Lulu,Nunu,Ahri,Riven,XinZhao,Leblanc,Kindred,Karma,Caitlyn,Tristana,Taric,JarvanIV,Fiora,Fizz,Katarina,Twitch,LeeSin,Karma,Thresh,Akshan,Zac,Nasus,Nidalee,Syndra,Amumu,Gnar,Lulu,Ziggs,Tristana,Diana,Caitlyn,Poppy,Nidalee,Irelia,Caitlyn,Morgana,XinZhao,Lucian,Camille,Ornn,Jinx,Akali,Cassiopeia,Lulu,Rengar,Kaisa,Vladimir,Ziggs,Vayne,TahmKench,Viego,Zac,Jhin,Talon,Vladimir,Sylas,Irelia,Seraphine,Kaisa,LeeSin,Katarina,Irelia,Zyra,XinZhao,Varus,Darius,Kassadin,Akshan,LeeSin,Ziggs,Soraka,Irelia,Darius,Kindred,Lucian,Kayn,Kaisa,Camille,Lulu,Kaisa,Orianna,MasterYi,XinZhao,LeeSin,Malphite,Sivir,Kayle,Khazix,Leblanc,Nasus,Lillia,Diana,Draven,Yuumi,Wukong,Akali,Diana,Ezreal,Graves,Jhin,TahmKench,Thresh,Garen,XinZhao,Leblanc,Samira,Janna,Vayne,Yasuo,Neeko,Kaisa,Nocturne,Camille,Qiyana,Mordekaiser,Samira,Nasus,Khazix,Seraphine,Nami"
+options = "Tristana,Kassadin,DrMundo,Soraka,Mordekaiser,Amumu,Camille,Leona,Diana,Katarina,Janna,Khazix,Vayne,Tryndamere,Chogath,Diana,Yasuo,Tristana,Heimerdinger,Volibear,Kaisa,Malphite,Gragas,Lux,Jhin,Trundle,Thresh,Shaco,Shen,Yasuo,Twitch,Zyra,Graves,Talon,Kennen,Jinx,Jhin,Akshan,Karma,Teemo,Gwen,Kennen,RekSai,Yorick,Ezreal,Karma,Shaco,Akali,Sion,Ezreal,Lucian,Kindred,Azir,Caitlyn,Lux,XinZhao,DrMundo,Samira,Kassadin,Tristana,Ahri,Graves,TahmKench,Ezreal,XinZhao,Vladimir,Morgana,Renekton,Urgot,Varus,Irelia,Diana,Rakan,Twitch,Vladimir,Malphite,Trundle,Kayn,Ahri,Yone,Tristana,Volibear,Zed,Nautilus,Jhin,Aatrox,MasterYi,Samira,Gwen,Leblanc,Teemo,Ahri,LeeSin,Ezreal,Lulu,Nunu,Ahri,Riven,XinZhao,Leblanc,Kindred,Karma,Caitlyn,Tristana,Taric,JarvanIV,Fiora,Fizz,Katarina,Twitch,LeeSin,Karma,Thresh,Akshan,Zac,Nasus,Nidalee,Syndra,Amumu,Gnar,Lulu,Ziggs,Tristana,Diana,Caitlyn,Poppy,Nidalee,Irelia,Caitlyn,Morgana,XinZhao,Lucian,Camille,Ornn,Jinx,Akali,Cassiopeia,Lulu,Rengar,Kaisa,Vladimir,Ziggs,Vayne,TahmKench,Viego,Zac,Jhin,Talon,Vladimir,Sylas,Irelia,Seraphine,Kaisa,LeeSin,Katarina,Irelia,Zyra,XinZhao,Varus,Darius,Kassadin,Akshan,LeeSin,Ziggs,Soraka,Irelia,Darius,Kindred,Lucian,Kayn,Kaisa,Camille,Lulu,Kaisa,Orianna,MasterYi,XinZhao,LeeSin,Malphite,Sivir,Kayle,Khazix,Leblanc,Nasus,Lillia,Diana,Draven,Yuumi,Wukong,Akali,Diana,Ezreal,Graves,Jhin,TahmKench,Thresh,Garen,XinZhao,Leblanc,Samira,Janna,Vayne,Yasuo,Neeko,Kaisa,Nocturne,Camille,Qiyana,Mordekaiser,Samira,Nasus,Khazix,Seraphine,Nami"
 draft = {
     "my_team": "".split(","),
     "enemy_team": "".split(",")
@@ -77,7 +77,7 @@ for match in list_of_matches:
     # counting how many games of each que type
     que_type[match_data["info"]["queueId"]] += 1
     participants = match_data["info"]["participants"]
-    win = win_status(participants)
+    win = my_win_status(participants)
     
     
     puuid = "uSeXv-1ss9cJrzBC9ZxEdWvyWLanYqK0ZhnIamsmdLhlqCDdDO9_QEgSLzjXB1-sqx06OceNxCi6LA"
