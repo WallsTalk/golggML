@@ -12,10 +12,11 @@ print(path_to_db)
 conn = sqlite3.connect(path_to_db)
 c = conn.cursor()
 
-all_teams = c.execute("select team_name from teams;").fetchall()
+all_teams = c.execute("select team_id, team_name, region, serie_id from teams;").fetchall()
 
 conn.close()
-
+for item in all_teams:
+    print(item)
 
 # league_list = ['LPL', 'LEC', 'LCK', 'LCS']
 # list_of_games = {}
