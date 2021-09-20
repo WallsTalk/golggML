@@ -23,12 +23,18 @@ list_of_games = {}
 for league in league_list:
     list_of_games[league] = []
     headers = {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.164 Safari/537.36"
+        "Origin": "https://gol.gg",
+        "Referer": "https://gol.gg/",
+        "sec-ch-ua": '"Google Chrome";v="90", " Not;A Brand";v="89", "Chromium";v="93"',
+        "sec-ch-ua-mobile": "?0",
+        "sec-ch-ua-platform": "Windows",
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/590.90 (KHTML, like Gecko) Chrome/93.0.4577.82 Safari/537.36"
     }
-    link = "https://gol.gg/tournament/tournament-matchlist/" + league + "%20Spring%202021/"
+    link = "https://gol.gg/tournament/tournament-matchlist/" + league + "%20Summer%202021/"
     print(link)
-    html_content = requests.get(link).text
+    html_content = requests.get(link, headers=headers).text
     soup = BeautifulSoup(html_content, "lxml")
+    print(soup)
     match_table = soup.find("table", attrs={"class": "table_list footable toggle-square-filled"})
     match_table_data = match_table.tbody.find_all("tr")
     match_list = []

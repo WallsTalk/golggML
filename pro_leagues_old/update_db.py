@@ -1,5 +1,5 @@
-import build_db.create_db
-import build_db.fetch_match_history
-import build_db.fetch_match_data
-import build_db.fill_match_data
-import build_db.clean_corrupted_data
+import pro_leagues_old.build_db.create_db
+import pro_leagues_old.build_db.fetch_match_history
+import pro_leagues_old.build_db.fetch_match_data
+import pro_leagues_old.build_db.fill_match_data
+import pro_leagues_old.build_db.clean_corrupted_data
