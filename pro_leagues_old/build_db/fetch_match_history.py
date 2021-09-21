@@ -3,6 +3,7 @@ from bs4 import BeautifulSoup
 import json
 import os
 import sqlite3
+import time
 
 
 # Root path
@@ -34,7 +35,6 @@ for league in league_list:
     print(link)
     html_content = requests.get(link, headers=headers).text
     soup = BeautifulSoup(html_content, "lxml")
-    print(soup)
     match_table = soup.find("table", attrs={"class": "table_list footable toggle-square-filled"})
     match_table_data = match_table.tbody.find_all("tr")
     match_list = []
@@ -52,7 +52,7 @@ for league in league_list:
                     list_of_games[league].append([game_id, tr.contents[6].contents[0], tr.contents[5].contents[0]])
                 game_id += 1
                 num_of_games -= 1
-
+    time.sleep(30)
 # Root project dir
 path_for_data = os.path.join(root, "build_db", "list_of_games.json")
 with open(path_for_data, "w") as games_list_file:

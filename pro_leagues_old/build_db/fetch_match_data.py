@@ -2,7 +2,7 @@ import json
 from bs4 import BeautifulSoup
 import requests
 import os
-
+import time
 
 # Root project dir
 root = os.path.abspath(os.path.join(__file__, os.pardir, os.pardir))
@@ -20,11 +20,20 @@ all_data = {
     "game_team_picks": {},
     "game_team_stats": {}
 }
+headers = {
+    "Origin": "https://gol.gg",
+    "Referer": "https://gol.gg/",
+    "sec-ch-ua": '"Google Chrome";v="90", " Not;A Brand";v="89", "Chromium";v="93"',
+    "sec-ch-ua-mobile": "?0",
+    "sec-ch-ua-platform": "Windows",
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/590.90 (KHTML, like Gecko) Chrome/93.0.4577.82 Safari/537.36"
+}
 for league, games in list_of_games.items():
     print("Fetching stats for " + league + " ...")
     for game in games:
         link = "https://gol.gg/game/stats/%s/page-game/" % game[0]
-        html_content = requests.get(link).text
+        print(link)
+        html_content = requests.get(link, headers=headers).text
         soup = BeautifulSoup(html_content, "lxml")
 
         # preppin game_data and team_data
@@ -78,10 +87,11 @@ for league, games in list_of_games.items():
                 result[red_team[2].replace("-", "").replace(" ", "")],
                 *red_picks,
                 *red_bans)
+        time.sleep(10)
 
         # now to load enhanced stats from other page tab
         link = "https://gol.gg/game/stats/%s/page-fullstats/" % game[0]
-        html_content = requests.get(link).text
+        html_content = requests.get(link, headers=headers).text
         soup = BeautifulSoup(html_content, "lxml")
 
         # INSERT INTO GAME_TEAMS_STATS (28463, '1105', "CS in Team's Jungle") ('5', '95', '16', '23', '0')
@@ -92,6 +102,7 @@ for league, games in list_of_games.items():
             stat_line_items = [item.text for item in stat_line.find_all("td")[1:]]
             all_data["game_team_stats"][str((game[0], blue_team_id, stat_line_name[0]))] = (*stat_line_items[:5],)
             all_data["game_team_stats"][str((game[0], red_team_id, stat_line_name[0]))] = (*stat_line_items[5:],)
+        time.sleep(10)
 
 # adding to files to insert into respective tables
 path_for_data = os.path.join(root, "build_db", "data_for_tables")
