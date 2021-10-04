@@ -5,6 +5,9 @@ import numpy as py
 import date
 
 
+# for next year, just make corelation between kda of roles and worlds standings
+
+
 # Root project dir
 root = os.path.abspath(os.path.join(__file__, os.pardir, os.pardir))
 path_to_db = os.path.join(root, "ML", "stats.db")
@@ -103,11 +106,14 @@ for reg in region.keys():
 ### for defeat analysis use: 'DMG%', 'GOLD%', 'KP%'
 ### for tempo analysis use: 'GD@15', 'CSD@15', 'XPD@15', 'LVLD@15', 'K+APerMinute'
 
+coff_power = {"top": 1.5, "jg": 2, "mid": 2, "adc": 1, "sup": 1}
+coff_kp = {"top": 1, "jg": 2, "mid": 2, "adc": 1, "sup": 2}
+coff_econ = {"top": 2, "jg": 2, "mid": 2, "adc": 2, "sup": 1}
 
 
-
-# this function looks at avg dmg dealt against other teams avg dmg taken "{0:.2f}".format(
-def calculate_dmg_trade(team1, team2):
+#this function looks at avg dmg dealt against avg dmg taken
+#team fighting
+def calculate_team_fighting(team1, team2):
     t1_score = {"dealt": 0, "taken": 0}
     t2_score = {"dealt": 0, "taken": 0}
     for role in roles:
@@ -115,10 +121,112 @@ def calculate_dmg_trade(team1, team2):
         t1_score["taken"] += team_stats[team1][role]['Totaldamagetaken']
         t2_score["dealt"] += team_stats[team2][role]['TotaldamagetoChampion']
         t2_score["taken"] += team_stats[team2][role]['Totaldamagetaken']
-    print(t1_score["taken"], t1_score["dealt"])
-    print(t2_score["taken"], t2_score["dealt"])
+    score = (t1_score["dealt"]/t1_score["taken"]) - (t2_score["dealt"]/t2_score["taken"])
+    return score
 
-calculate_dmg_trade(teams['Rogue'], teams['DWG KIA'])
+
+
+
+# this function looks at avg dmg dealt against other teams avg dmg taken 
+# team fighting
+# def calculate_team_fighting(team1, team2):
+#     t1_score = {"dealt": 0, "taken": 0}
+#     t2_score = {"dealt": 0, "taken": 0}
+#     for role in roles:
+#         t1_score["dealt"] += team_stats[team1][role]['TotaldamagetoChampion']
+#         t1_score["taken"] += team_stats[team1][role]['Totaldamagetaken']
+#         t2_score["dealt"] += team_stats[team2][role]['TotaldamagetoChampion']
+#         t2_score["taken"] += team_stats[team2][role]['Totaldamagetaken']
+#     score = (t1_score["dealt"]/t1_score["taken"]) - (t2_score["dealt"]/t2_score["taken"])
+#     return score
+
+# calculate_team_fighting(*vs)
+
+
+# # how fast teams grow gold
+# # economy
+# def calculate_economy(team1, team2):
+#     score = 0
+#     for role in roles:
+#         score += (team_stats[team1][role]['GPM'] - team_stats[team2][role]['GPM']) * coff_power[role]
+#     return score
+
+# calculate_economy(*vs)
+
+
+
+# # how mutch teams dps
+# # dps
+# def calculate_dps(team1, team2):
+#     score = 0
+#     for role in roles:
+#         score += (team_stats[team1][role]['DPM'] - team_stats[team2][role]['DPM']) * coff_power[role]
+#     return score
+
+# calculate_dps(*vs)
+
+
+
+# def calculate_meta(team1, team2):
+#     score = 0
+#     for role in roles:
+#         score += (team_stats[team1][role]['DMG%'] - team_stats[team2][role]['DMG%']) * coff_power[role]
+#         score += (team_stats[team1][role]['KP%'] - team_stats[team2][role]['KP%']) * coff_kp[role]
+#     return score
+
+# vs = [teams['T1'], teams['100 Thieves']]
+# vs = [teams['Royal Never Give Up'], teams['Fnatic']]
+# vs = [teams['DWG KIA'], teams['Funplus Phoenix']]
+# vs = [teams['Rogue'], teams['DWG KIA']]
+# vs = [teams['T1'], teams['Edward Gaming']]
+# vs = [teams['Rogue'], teams['Funplus Phoenix']]
+# vs = [teams['MAD Lions'], teams['Gen.G eSports']]
+# vs = [teams['MAD Lions'], teams['Team Liquid']]
+# vs = [teams['Gen.G eSports'], teams['Team Liquid']]
+# vs = [teams['DWG KIA'], teams['Funplus Phoenix']]
+
+
+# #def calculate_tempo(team1, team2):
+# #     score = 0
+# #     for role in roles:
+# #         score += (team_stats[team1][role]['GD@15'] * coff_power[role])/(team_stats[team2][role]['GD@15'] * coff_power[role])
+# #         score += (team_stats[team1][role]['CSD@15'] * coff_econ[role])/(team_stats[team2][role]['CSD@15'] * coff_econ[role])
+# #         score += (team_stats[team1][role]['XPD@15'] * coff_econ[role])/(team_stats[team2][role]['XPD@15'] * coff_econ[role])
+# #         score += (team_stats[team1][role]['K+APerMinute'] * coff_kp[role])/(team_stats[team2][role]['K+APerMinute'] * coff_kp[role])
+# #     return score/4
+
+# def calculate_early_lead(team1, team2):
+#     score = 0
+#     for role in roles:
+#         score += (team_stats[team1][role]['GD@15'] - team_stats[team2][role]['GD@15']) * coff_power[role]
+#         score += (team_stats[team1][role]['CSD@15'] - team_stats[team2][role]['CSD@15']) * coff_econ[role]
+#         score += (team_stats[team1][role]['XPD@15'] - team_stats[team2][role]['XPD@15']) * coff_econ[role]
+#     return score
+
+# def calculate_tempo(team1, team2):
+#     score = 0
+#     for role in roles:
+#         score += (team_stats[team1][role]['K+APerMinute'] - team_stats[team2][role]['K+APerMinute']) * coff_kp[role]    
+#     return score
+
+# calculate_tempo(*vs)
+# calculate_early_lead(*vs)
+# calculate_fighting(*vs)
+# calculate_dps(*vs) # bonus points if economy is better, - points if its worse
+# calculate_economy(*vs)
+# calculate_meta(*vs)
+
+
+
+
+
+# def calculate_economy(team1, team2):
+#     score
+#     for role in roles:
+#         t1_score[role] = team_stats[team1][role]['GPM']
+#         t2_score[role] = team_stats[team2][role]['GPM']
+#     return score
+
 
 
 
