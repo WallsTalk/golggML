@@ -115,8 +115,8 @@ def calculate_dmg_trade(team1, team2):
         t1_score["taken"] += team_stats[team1][role]['Totaldamagetaken']
         t2_score["dealt"] += team_stats[team2][role]['TotaldamagetoChampion']
         t2_score["taken"] += team_stats[team2][role]['Totaldamagetaken']
-    print(t1_score["taken"] - t2_score["dealt"])
-    print(t2_score["taken"] - t1_score["dealt"])
+    print(t1_score["taken"], t1_score["dealt"])
+    print(t2_score["taken"], t2_score["dealt"])
 
 calculate_dmg_trade(teams['Rogue'], teams['DWG KIA'])
 
