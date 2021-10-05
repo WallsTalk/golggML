@@ -31,7 +31,7 @@ conn.close()
 df = pd.merge(games, gt_stats, on="game_id")
 df = pd.merge(df, gt_picks, on=["game_id", "team_id"])
 df['game_date'] = pd.to_datetime(df['game_date'])
-df = df[df['game_date'] > datetime.datetime(2021, 5, 1)]
+df = df[df['game_date'] < datetime.datetime(2021, 5, 1)]
 
 
 # df = df.set_index(['game_id'])
@@ -45,6 +45,12 @@ df = df[df['game_date'] > datetime.datetime(2021, 5, 1)]
 
 stat_types = df["stat_type"].unique().tolist()
 roles = ["top", "jg", "mid", "adc", "sup"]
+worlds_teams = ['Royal Never Give Up', 'Funplus Phoenix', 'Edward Gaming', 'Rogue', 'Fnatic', 'MAD Lions', 'DWG KIA', 'T1', 'Gen.G eSports', '100 Thieves', 'Team Liquid']
+coff_power = {"top": 1.5, "jg": 2, "mid": 2, "adc": 1, "sup": 1}
+coff_kp = {"top": 1, "jg": 2, "mid": 2, "adc": 1, "sup": 2}
+coff_econ = {"top": 2, "jg": 2, "mid": 2, "adc": 2, "sup": 1}
+
+
 team_stats = {}
 for team_id in teams.values():
     team_stats[team_id] = {}
@@ -63,7 +69,7 @@ for team_id in teams.values():
             team_stats[team_id][role][stat] = float("{0:.2f}".format(pd.to_numeric(column).mean()))
 
 
-worlds_teams = ['Royal Never Give Up', 'Funplus Phoenix', 'Edward Gaming', 'Rogue', 'Fnatic', 'MAD Lions', 'DWG KIA', 'T1', 'Gen.G eSports', '100 Thieves', 'Team Liquid']
+
 
 
 def show_comparison_stats(stat_to_check):
@@ -83,18 +89,16 @@ show_comparison_stats('VisionScore')
 
 
 # region kda insights
-for reg in region.keys():
-    for role in roles:
-        reg_teams = list(map(lambda x: float(team_stats[x[1]][role]['KDA']), region[reg]))
-        print(reg, role , min(reg_teams), max(reg_teams),  max(reg_teams) - min(reg_teams))
+# for reg in region.keys():
+#     for role in roles:
+#         reg_teams = list(map(lambda x: float(team_stats[x[1]][role]['KDA']), region[reg]))
+#         print(reg, role , min(reg_teams), max(reg_teams),  max(reg_teams) - min(reg_teams))
 
 ### for avg analysis use: 'GPM', 'DPM', 'TotaldamagetoChampion', 'Totaldamagetaken'
 ### for defeat analysis use: 'DMG%', 'GOLD%', 'KP%'
 ### for tempo analysis use: 'GD@15', 'CSD@15', 'XPD@15', 'LVLD@15', 'K+APerMinute'
 
-coff_power = {"top": 1.5, "jg": 2, "mid": 2, "adc": 1, "sup": 1}
-coff_kp = {"top": 1, "jg": 2, "mid": 2, "adc": 1, "sup": 2}
-coff_econ = {"top": 2, "jg": 2, "mid": 2, "adc": 2, "sup": 1}
+
 
 
 # how mutch teams dps
@@ -167,15 +171,14 @@ def make_list(look_at):
     calculate_dps(look_at),
     calculate_meta(look_at),
     calculate_team_fighting(look_at),
-    calculate_early_lead(look_at),
     calculate_economy(look_at),
     calculate_tempo(look_at),
     calculate_execution(look_at)
     ]  
-    return column 
+    return column
 
-world_stats_dict = {team: make_list(teams[team]) for team in worlds_teams}
-world_stats_df = pd.DataFrame(data=world_stats_dict)
+df_world_stats.sort_values('execution', ascending=False)
+
 
 for team in worlds_teams:
     team
