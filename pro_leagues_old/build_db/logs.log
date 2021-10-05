@@ -184,3 +184,14 @@ game_team_picks | Corrupted games count in tables: 12
 [(['31654', '1136'], ('31654', '1136', 1, 0, 28, 98, 50, 135, 118, 38, 72, 64, 104), OperationalError('table game_team_picks has 14 columns but 13 values were supplied'))]
 game_team_stats | Corrupted games count in tables: 0
 team | Corrupted games count in tables: 0
+2021-10-05 10:50:32.785182
+game_team_picks | Corrupted games count in tables: 3
+33591
+[(['33591', '1194'], ('33591', '1194', 0, 1, 72, 47, 49, 115, 62, 154, 92, 48, 4), OperationalError('table game_team_picks has 14 columns but 13 values were supplied'))]
+33285
+[(['33285', '1192'], ('33285', '1192', 1, 1, 72, 16, 154, 115, 4, 66, 155, 46, 139), OperationalError('table game_team_picks has 14 columns but 13 values were supplied'))]
+33274
+[(['33274', '1193'], ('33274', '1193', 1, 1, 155, 47, 46, 100, 4, 31, 110, 3, 21), OperationalError('table game_team_picks has 14 columns but 13 values were supplied'))]
+game | Corrupted games count in tables: 0
+game_team_stats | Corrupted games count in tables: 0
+team | Corrupted games count in tables: 0

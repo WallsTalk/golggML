@@ -19,7 +19,9 @@ conn.close()
 
 
 print("Fetching match history ...")
-league_list = ['LPL', 'LEC', 'LCK', 'LCS']
+league_list = ['LPL', 'LEC', 'LCK', 'LCS', 'PCS']
+# make sure coorect leagues are selected!!
+league_list = ['PCS']
 list_of_games = {}
 for league in league_list:
     list_of_games[league] = []
