@@ -2,9 +2,9 @@
 import sqlite3
 import os
 
-# Check games in stats.db that dont have stats in corresponding table
+# Check games in stats_old.db that dont have stats in corresponding table
 root = os.path.abspath(os.path.join(__file__, os.pardir, os.pardir))
-path_to_db = os.path.join(root, "ML", "stats.db")
+path_to_db = os.path.join(root, "ML", "stats_old.db")
 conn = sqlite3.connect(path_to_db)
 c = conn.cursor()
 
@@ -26,6 +26,6 @@ game_ids_after = [item[0] for item in c.execute("select game_id from game;").fet
 conn.close()
 print("Removed %s corrupted matches." % str(len(game_ids) - len(game_ids_after)))
 
-print("Total matches in stats.db: " + str(len(game_ids_after)))
+print("Total matches in stats_old.db: " + str(len(game_ids_after)))
 print("Done.")
 

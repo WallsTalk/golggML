@@ -34,7 +34,7 @@ CREATE TABLE IF NOT EXISTS game_team_stats (
 	sup varchar,
 	unique(game_id,team_id,stat_type)
 );
-CREATE TABLE IF NOT EXISTS team (
+CREATE TABLE IF NOT EXISTS teams (
 	team_id integer unique,
 	team_name varchar,
 	region varchar

@@ -9,13 +9,13 @@ import time
 
 # Root path
 root = os.path.abspath(os.path.join(__file__, os.pardir, os.pardir))
-path_to_db = os.path.join(root, "ML", "stats.db")
+path_to_db = os.path.join(root, "ML", "stats_old.db")
 
-# Check existing game_ids in stats.db
+# Check existing game_ids in stats_old.db
 conn = sqlite3.connect(path_to_db)
 c = conn.cursor()
 existing_games = [game_id[0] for game_id in c.execute("SELECT game_id FROM game;").fetchall()]
-print(str(len(existing_games)) + " games found in stats.db")
+print(str(len(existing_games)) + " games found in stats_old.db")
 conn.close()
 
 
