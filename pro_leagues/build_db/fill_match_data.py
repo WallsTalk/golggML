@@ -29,8 +29,10 @@ for table, data in all_data.items():
 			key_list = key.replace("(", "").replace(")", "").replace(" ", "").replace("'", "").split(",")
 			values = tuple(key_list + row)
 			c.execute("INSERT INTO %s VALUES %s" % (table, values))
+			print((table, values))
 		except Exception as e:
-			if table != "team":
+			print((table, values))
+			if table != "teams":
 				if key_list[0] not in failed_data[table].keys():
 					failed_data[table][key_list[0]] = [(key_list, values, e)]
 				else:

@@ -9,7 +9,7 @@ import time
 
 # Root path
 root = os.path.abspath(os.path.join(__file__, os.pardir, os.pardir))
-path_to_db = os.path.join(root, "ML", "stats_old.db")
+path_to_db = os.path.join(root, "ML", "stats.db")
 
 # Check existing game_ids in stats_old.db
 conn = sqlite3.connect(path_to_db)
@@ -20,14 +20,30 @@ conn.close()
 
 
 print("Fetching match history ...")
-league_list = ['LPL', 'LEC', 'LCK', 'LCS']
+league_list = {'LPL': "Summer",
+               'LEC': "Summer",
+               'LCK': "Summer",
+               'LCS': "Summer",
+               'CBLOL': "Split%202",
+               'VCS': "Summer",
+               'PCS': "Summer",
+               'TCL': "Summer",
+               'LJL': "Summer",
+               'LLA': "Closing",
+               'LCL': "Summer",
+               'LCO': "Split%202"}
+
+#league_list = {'LCS': "Summer"}
+
 list_of_games = {}
 for league in league_list:
     list_of_games[league] = []
     headers = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.164 Safari/537.36"
     }
-    link = "https://gol.gg/tournament/tournament-matchlist/" + league + "%20Summer%202022/"
+    link = "https://gol.gg/tournament/tournament-matchlist/" + league + "%20" + league_list[league] + "%20Playoffs%202020/"
+    #LCS LOL
+    #link = "https://gol.gg/tournament/tournament-matchlist/" + league + "%20Championship%202021/"
     print(link)
     html_content = requests.get(link, headers=headers).text
     soup = BeautifulSoup(html_content, "lxml")

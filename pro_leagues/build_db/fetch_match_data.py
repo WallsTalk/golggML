@@ -16,7 +16,7 @@ with open(path_to_list_of_games, "r") as games_list_file:
 
 #  dicts for tables maped by id of row and object of table
 all_data = {
-    "team": {},
+    "teams": {},
     "game": {},
     "game_team_picks": {},
     "game_team_stats": {}
@@ -48,10 +48,10 @@ for league, games in list_of_games.items():
             red_team_id)
 
         # INSERT INTO TEAMS ('1153', 'Misfits Gaming', 'LEC'), ('1152', 'MAD Lions', 'LEC')  FOR EACH ID
-        if blue_team_id not in all_data["team"].keys():
-            all_data["team"][blue_team_id] = (blue_team[1].text, league)
-        if red_team_id not in all_data["team"].keys():
-            all_data["team"][red_team_id] = (red_team[1].text, league)
+        if blue_team_id not in all_data["teams"].keys():
+            all_data["teams"][blue_team_id] = (blue_team[1].text, league)
+        if red_team_id not in all_data["teams"].keys():
+            all_data["teams"][red_team_id] = (red_team[1].text, league)
 
         # getting picks and bans for eatch team
         blue_bans = []
