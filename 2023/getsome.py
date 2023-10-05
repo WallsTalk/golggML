@@ -4,10 +4,10 @@ from bs4 import BeautifulSoup
 import json
 import time
 import os
+import random
 
 
 def main():
-    href_turneys = "https://gol.gg/tournament/tournament-matchlist/"
     sesh = requests.session()
     season = "13"
 
@@ -22,7 +22,7 @@ def main():
 
         for turney in turneys2023:
             print(turney)
-            turney_soup = BeautifulSoup(sesh.get(href_turneys+turney.replace(" ", "%20")).text, "lxml")
+            turney_soup = BeautifulSoup(sesh.get("https://gol.gg/tournament/tournament-matchlist/"+turney.replace(" ", "%20")).text, "lxml")
             matches = [
                 [int(tr.find("a")["href"].split("/")[3]) + game for game in range(sum([int(score) for score in tr.find("td", attrs={"class": "text-center"}).text.split('-')]))]
                 for tr in turney_soup.find("table", attrs={"class": ['table_list', 'footable', 'toggle-square-filled']}).find("tbody").find_all("tr")
@@ -47,7 +47,7 @@ def main():
                 "sec-ch-ua-platform":"Windows",
             }
 
-            time.sleep(1)
+            time.sleep(random.randint(1,4))
             for match in matches:
                 for game in match:
                     if game not in game_history:
@@ -58,17 +58,21 @@ def main():
                         stats["champs"] = [champ["alt"] for champ in href_game.find("table", attrs={"class": ["completestats", "tablesaw", "tablesaw-swipe"]}).find("thead").find_all("img")]
 
                         # get game timeline
-                        href_timeline = sesh.get(f"https://gol.gg/game/stats/{game}/page-timeline/", headers=headers).text
-                        href_timeline = BeautifulSoup(href_timeline, "lxml")
+
+                        try:
+                            href_timeline = BeautifulSoup(sesh.get(f"https://gol.gg/game/stats/{game}/page-timeline/", headers=headers).text, "lxml")
 
                         #cols = [col.text for col in href_timeline.find("table", attrs={"class": ['nostyle', 'timeline', 'trhover']}).find_all("tr")[0].find_all("th")]
-                        events = [
-                            [
-                                val.find("img")["src"].replace("../_img/", "").replace(".png", "").replace("-icon", "").replace("champions_icon/", "")
-                                if val.find("img") else val.text for val in event.find_all("td")
+                            events = [
+                                [
+                                    val.find("img")["src"].replace("../_img/", "").replace(".png", "").replace("-icon", "").replace("champions_icon/", "")
+                                    if val.find("img") else val.text for val in event.find_all("td")
+                                ]
+                                for event in href_timeline.find("table", attrs={"class": ['nostyle', 'timeline', 'trhover']}).find_all("tr")[1:]
                             ]
-                            for event in href_timeline.find("table", attrs={"class": ['nostyle', 'timeline', 'trhover']}).find_all("tr")[1:]
-                        ]
+                        except AttributeError:
+                            events = []
+
 
                         match_object = {
                             "season": season,
@@ -79,7 +83,7 @@ def main():
                         }
                         game_collection.write(json.dumps(match_object) + "\n")
 
-                    time.sleep(1)
+                    time.sleep(random.randint(1,4))
 
 
 if __name__ == "__main__":

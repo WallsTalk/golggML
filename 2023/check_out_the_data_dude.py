@@ -10,7 +10,8 @@ def main():
     with open("game_collection", "r") as game_history:
         game_history = [json.loads(game) for game in game_history.read().split("\n")[:-1]]
 
-    x= [item["game_id"] for item in game_history if item["turney"]=="LFL Promotion 2024/"]
+    x= [item["game_id"] for item in game_history if item["turney"]=="LEC Season Finals 2023/"]
+    print(game_history[61])
     print(x, len(x))
 
 
