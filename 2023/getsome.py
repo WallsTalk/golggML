@@ -3,20 +3,24 @@ import requests
 from bs4 import BeautifulSoup
 import json
 import time
+import os
 
 
 def main():
     href_turneys = "https://gol.gg/tournament/tournament-matchlist/"
     sesh = requests.session()
-    with open("2023turneys", "r") as turneys2023:
+    season = "13"
+
+    with open(os.path.join(os.getcwd(), "turneys", season), "r") as turneys2023:
         turneys2023 = turneys2023.read().split("\n")
 
-    with open("game_collection", "r") as game_history:
-        game_history = [json.loads(game)["game_id"] for game in game_history.read().split("\n")[-1]]
+    current_game_colection = "game_collection"
+    with open(os.path.join(os.getcwd(), current_game_colection), "r") as game_history:
+        game_history = [json.loads(game)["game_id"] for game in game_history.read().split("\n")[:-1]]
 
-    with open("game_collection", "a") as game_collection:
+    with open(os.path.join(os.getcwd(), current_game_colection), "a") as game_collection:
 
-        for turney in turneys2023[:1]:
+        for turney in turneys2023:
             print(turney)
             turney_soup = BeautifulSoup(sesh.get(href_turneys+turney.replace(" ", "%20")).text, "lxml")
             matches = [
@@ -67,6 +71,7 @@ def main():
                         ]
 
                         match_object = {
+                            "season": season,
                             "turney": turney,
                             "game_id": game,
                             "stats": stats,
