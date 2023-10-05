@@ -1,20 +1,19 @@
 
 
-import requests
-from bs4 import BeautifulSoup
+
 import json
-import time
+import pandas as pd
 
 
 def main():
     with open("game_collection", "r") as game_history:
         game_history = [json.loads(game) for game in game_history.read().split("\n")[:-1]]
+    game_stats = [game["stats"] for game in game_history]
+    #df = pd.DataFrame([game["stats"] for game in game_history])
 
-    x= [item["game_id"] for item in game_history if item["turney"]=="LEC Season Finals 2023/"]
-    print(game_history[61])
-    print(x, len(x))
-
-
+    #df[df.columns.map(lambda x: "B_" + x)] = df.applymap(lambda x: x[:5])
+    df = pd.DataFrame({("B_" + key: vals[:5], "R_" + key: vals[5:]) for game in game_stats for key, vals in game.items()})
+    x = 1
 
 if __name__ == "__main__":
     main()
