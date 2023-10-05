@@ -20,20 +20,24 @@ conn.close()
 
 
 print("Fetching match history ...")
-league_list = {'LPL': "Summer",
-               'LEC': "Summer",
-               'LCK': "Summer",
-               'LCS': "Summer",
-               'CBLOL': "Split%202",
-               'VCS': "Summer",
-               'PCS': "Summer",
-               'TCL': "Summer",
-               'LJL': "Summer",
-               'LLA': "Closing",
-               'LCL': "Summer",
-               'LCO': "Split%202"}
+# league_list = {'LPL': "Summer",
+#                'LEC': "Summer",
+#                'LCK': "Summer",
+#                'LCS': "Summer",
+#                'CBLOL': "Split%202",
+#                'VCS': "Summer",
+#                'PCS': "Summer",
+#                'TCL': "Summer",
+#                'LJL': "Summer",
+#                'LLA': "Closing",
+#                'LCL': "Summer",
+#                'LCO': "Split%202"}
 
 #league_list = {'LCS': "Summer"}
+
+league_list = ["Championship%20Play-In"] #, "Championship"]
+
+
 
 list_of_games = {}
 for league in league_list:
@@ -41,9 +45,12 @@ for league in league_list:
     headers = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.164 Safari/537.36"
     }
-    link = "https://gol.gg/tournament/tournament-matchlist/" + league + "%20" + league_list[league] + "%20Playoffs%202020/"
+    #link = "https://gol.gg/tournament/tournament-matchlist/" + league + "%20" + league_list[league] + "%20Playoffs%202020/"
     #LCS LOL
     #link = "https://gol.gg/tournament/tournament-matchlist/" + league + "%20Championship%202021/"
+
+    # worlds
+    link = f"https://gol.gg/tournament/tournament-matchlist/World%20{league}%202022/"
     print(link)
     html_content = requests.get(link, headers=headers).text
     soup = BeautifulSoup(html_content, "lxml")

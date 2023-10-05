@@ -4,7 +4,7 @@ import pandas as pd
 
 # Root project dir
 root = os.path.abspath(os.path.join(__file__, os.pardir, os.pardir))
-path_to_db = os.path.join(root, "ML", "stats.db")
+path_to_db = os.path.join(root, "ML", "../../IWORKHERE/stats.db")
 
 
 conn = sqlite3.connect(path_to_db)
@@ -22,8 +22,8 @@ print(c.execute("select count(*) from teams;").fetchall())
 c.execute("delete from teams;")
 print(c.execute("select count(*) from teams;").fetchall())
 
-for item in c.execute("select * from champions;").fetchall():
-    print(item)
+# for item in c.execute("select * from champions;").fetchall():
+#     print(item)
 conn.commit()
 # # for item in output:
 # #     c.execute("INSERT INTO champions VALUES %s" % item)

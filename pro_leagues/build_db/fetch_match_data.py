@@ -21,19 +21,28 @@ all_data = {
     "game_team_picks": {},
     "game_team_stats": {}
 }
+
 for league, games in list_of_games.items():
     print("Fetching stats for " + league + " ...")
     headers = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.164 Safari/537.36"
     }
-    for game in games:
-        link = "https://gol.gg/game/stats/%s/page-game/" % game[0]
 
-        html_content = requests.get(link, headers=headers).text
-        soup = BeautifulSoup(html_content, "lxml")
+    for game in games:
 
         # preppin game_data and team_data
-        game_time = soup.find("div", attrs={"class": "col-6 text-center"}).contents[3].contents[0]
+        while True:
+            try:
+                link = "https://gol.gg/game/stats/%s/page-game/" % game[0]
+                print(link)
+                html_content = requests.get(link, headers=headers).text
+                print(html_content[:100])
+                soup = BeautifulSoup(html_content, "lxml")
+                game_time = soup.find("div", attrs={"class": "col-6 text-center"}).contents[3].contents[0]
+                break
+            except:
+                time.sleep(30)
+
         blue_team = soup.find("div", attrs={"class": "col-12 blue-line-header"}).contents
         red_team = soup.find("div", attrs={"class": "col-12 red-line-header"}).contents
         blue_team_id = int(blue_team[1]['href'].split("/")[3])
@@ -85,21 +94,28 @@ for league, games in list_of_games.items():
                 *red_bans)
 
         # now to load enhanced stats from other page tab
-        link = "https://gol.gg/game/stats/%s/page-fullstats/" % game[0]
-        html_content = requests.get(link, headers=headers).text
-        soup = BeautifulSoup(html_content, "lxml")
-        time.sleep(6)
-        # INSERT INTO GAME_TEAMS_STATS (28463, '1105', "CS in Team's Jungle") ('5', '95', '16', '23', '0')
-        # for each GAME ID and TEAM ID
+        while True:
+            try:
+                time.sleep(30)
+                link = "https://gol.gg/game/stats/%s/page-fullstats/" % game[0]
+                html_content = requests.get(link, headers=headers).text
+                soup = BeautifulSoup(html_content, "lxml")
 
-        match_stats_table = soup.find("table", attrs={"class": "completestats tablesaw"}).find_all("tr")
+                # INSERT INTO GAME_TEAMS_STATS (28463, '1105', "CS in Team's Jungle") ('5', '95', '16', '23', '0')
+                # for each GAME ID and TEAM ID
+
+                match_stats_table = soup.find("table", attrs={"class": "completestats tablesaw"}).find_all("tr")
+                break
+            except:
+                pass
+
         for stat_line in match_stats_table[3:]:
             stat_line_name = [stat_line.find_all("td")[0].text]
             stat_line_items = [item.text for item in stat_line.find_all("td")[1:]]
             all_data["game_team_stats"][str((game[0], blue_team_id, stat_line_name[0]))] = (*stat_line_items[:5],)
             all_data["game_team_stats"][str((game[0], red_team_id, stat_line_name[0]))] = (*stat_line_items[5:],)
 
-    time.sleep(10)
+    time.sleep(30)
 
 # adding to files to insert into respective tables
 path_for_data = os.path.join(root, "build_db", "data_for_tables")
