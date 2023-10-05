@@ -23,7 +23,7 @@ def main():
                 [int(tr.find("a")["href"].split("/")[3]) + game for game in range(sum([int(score) for score in tr.find("td", attrs={"class": "text-center"}).text.split('-')]))]
                 for tr in turney_soup.find("table", attrs={"class": ['table_list', 'footable', 'toggle-square-filled']}).find("tbody").find_all("tr")
             ]
-            # returns list of ('53505', 3)
+            # returns list of matches [53505, 53506, 53507]
             headers = {
                 "Accept":"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
                 "Accept-Encoding":"gzip, deflate, br",
