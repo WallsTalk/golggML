@@ -83,7 +83,7 @@ def main():
                         }
                         game_collection.write(json.dumps(match_object) + "\n")
 
-                    time.sleep(random.randint(1,4))
+                        time.sleep(random.randint(1,4))
 
 
 if __name__ == "__main__":
