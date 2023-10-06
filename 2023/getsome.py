@@ -8,21 +8,20 @@ import random
 
 
 def main():
-    sesh = requests.session()
     season = "13"
 
     with open(os.path.join(os.getcwd(), "turneys", season), "r") as turneys2023:
         turneys2023 = turneys2023.read().split("\n")
 
-    current_game_colection = "game_collection"
-    with open(os.path.join(os.getcwd(), current_game_colection), "r") as game_history:
+    current_game_colection = "game_collection2_" + season
+    with open(os.path.join(os.getcwd(), "history", current_game_colection), "r") as game_history:
         game_history = [json.loads(game)["game_id"] for game in game_history.read().split("\n")[:-1]]
 
-    with open(os.path.join(os.getcwd(), current_game_colection), "a") as game_collection:
+    with open(os.path.join(os.getcwd(), "history", current_game_colection), "a") as game_collection:
 
-        for turney in turneys2023:
+        for turney in turneys2023[:1]:
             print(turney)
-            turney_soup = BeautifulSoup(sesh.get("https://gol.gg/tournament/tournament-matchlist/"+turney.replace(" ", "%20")).text, "lxml")
+            turney_soup = BeautifulSoup(requests.get("https://gol.gg/tournament/tournament-matchlist/"+turney.replace(" ", "%20")).text, "lxml")
             matches = [
                 [int(tr.find("a")["href"].split("/")[3]) + game for game in range(sum([int(score) for score in tr.find("td", attrs={"class": "text-center"}).text.split('-')]))]
                 for tr in turney_soup.find("table", attrs={"class": ['table_list', 'footable', 'toggle-square-filled']}).find("tbody").find_all("tr")
@@ -51,16 +50,23 @@ def main():
             for match in matches:
                 for game in match:
                     if game not in game_history:
-                        # get game stats
                         print(match, game)
-                        href_game = BeautifulSoup(sesh.get(f"https://gol.gg/game/stats/{game}/page-fullstats/", headers=headers).text, "lxml")
+                        href_game = BeautifulSoup(requests.get(f"https://gol.gg/game/stats/{game}/page-game/", headers=headers).text, "lxml")
+                        blue_team = href_game.find("div", attrs={"class": "col-12 blue-line-header"}).text.split(" - ")[0].replace("\n", "")
+                        blue_result = href_game.find("div", attrs={"class": "col-12 blue-line-header"}).text.split(" - ")[1]
+                        red_team = href_game.find("div", attrs={"class": "col-12 red-line-header"}).text.split(" - ")[0].replace("\n", "")
+                        red_result = href_game.find("div", attrs={"class": "col-12 red-line-header"}).text.split(" - ")[1].replace(
+                            " ", "")
+                        # get game stats
+                        x=1
+                        href_game = BeautifulSoup(requests.get(f"https://gol.gg/game/stats/{game}/page-fullstats/", headers=headers).text, "lxml")
                         stats = {col.find_all("td")[0].text: [val.text for val in col.find_all("td")[1:]] for col in href_game.find("table", attrs={"class": ["completestats", "tablesaw", "tablesaw-swipe"]}).find_all("tr")[1:]}
                         stats["champs"] = [champ["alt"] for champ in href_game.find("table", attrs={"class": ["completestats", "tablesaw", "tablesaw-swipe"]}).find("thead").find_all("img")]
 
                         # get game timeline
 
                         try:
-                            href_timeline = BeautifulSoup(sesh.get(f"https://gol.gg/game/stats/{game}/page-timeline/", headers=headers).text, "lxml")
+                            href_timeline = BeautifulSoup(requests.get(f"https://gol.gg/game/stats/{game}/page-timeline/", headers=headers).text, "lxml")
 
                         #cols = [col.text for col in href_timeline.find("table", attrs={"class": ['nostyle', 'timeline', 'trhover']}).find_all("tr")[0].find_all("th")]
                             events = [
@@ -76,6 +82,10 @@ def main():
 
                         match_object = {
                             "season": season,
+                            "blue_team": blue_team,
+                            "blue_result": blue_result,
+                            "red_team": red_team,
+                            "red_result": red_result,
                             "turney": turney,
                             "game_id": game,
                             "stats": stats,

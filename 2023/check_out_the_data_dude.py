@@ -6,17 +6,19 @@ import pandas as pd
 
 
 def main():
-    with open("game_collection_13", "r") as game_history:
+    with open("game_collection_12", "r") as game_history:
         game_history = [json.loads(game) for game in game_history.read().split("\n")[:-1]]
-    count = 0
+    count = {}
     count2 = 0
-
+    tur = []
     for game in game_history:
         if not game["events"]:
-            count += 1
-        else:
-            count2 += 1
+            if game["turney"] not in count:
+                count[game["turney"]] = 0
+            count[game["turney"]] += 1
+
     print(count, count2)
+    print(set(tur))
     # game_stats = [game["stats"] for game in game_history]
     # #df = pd.DataFrame([game["stats"] for game in game_history])
     # df = pd.DataFrame([{stat.replace(" ", "-").replace("@", "at").replace("%", "-proc").replace("'", "").replace("+", "").lower() + ("B" if i < 5 else "R") + game["stats"]["Role"][i][0]: vals[i] for stat, vals in game["stats"].items() for
