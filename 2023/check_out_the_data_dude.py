@@ -6,9 +6,9 @@ import pandas as pd
 import os
 
 def main():
-    season = "13"
+    season = "12"
     current_game_colection = "game_collection2_" + season
-    with open(os.path.join(os.getcwd(), "history", current_game_colection), "r") as game_history:
+    with open(os.path.join(os.getcwd(), "work_history", current_game_colection), "r") as game_history:
         game_history = [json.loads(game) for game in game_history.read().split("\n")[:-1]]
 
     statsdf = []
@@ -21,6 +21,19 @@ def main():
 
         }
         champ2role = {game["stats"]["champs"][i].replace(" ", "").lower(): game["stats"]["Role"][i] for i in range(10)}
+        if "bel" in champ2role:
+            champ2role["belveth"] = champ2role["bel"]
+        if "kha" in champ2role:
+            champ2role["khazix"] = champ2role["kha"]
+        if "kai" in champ2role:
+            champ2role["kaisa"] = champ2role["kai"]
+        if "rek" in champ2role:
+            champ2role["reksai"] = champ2role["rek"]
+        if "kog" in champ2role:
+            champ2role["kogmaw"] = champ2role["kog"]
+        if "cho" in champ2role:
+            champ2role["chogath"] = champ2role["cho"]
+
         for stat, vals in game["stats"].items():
             stat_name = stat.replace(" ", "-").replace("@", "at").replace("%", "-proc").replace("'", "").replace(
                 "+", "").lower()
@@ -33,14 +46,16 @@ def main():
         for i in range(len(game["events"])):
             event = game["events"][i]
             a[f"time{i}"] = event[0]
-            if event[5] == "kill;gold":
-                target = champ2role[event[5].lower()][0]
-            else:
-                target = event[6]
+            try:
+                if event[5] == "kill;gold":
+                    target = champ2role[event[5].lower()][0]
+                else:
+                    target = event[6]
 
 
-            a[f"event{i}"] = event[1][0]+ ";".join([champ2role[champ.lower()][0] for champ in event[3].split(";") if champ]) + event[4] + target
-
+                    a[f"event{i}"] = event[1][0]+ ";".join([champ2role[champ.lower()][0] for champ in event[3].split(";") if champ]) + event[4] + target
+            except KeyError as e:
+                x=1
 
             x=1
         statsdf.append(a)
