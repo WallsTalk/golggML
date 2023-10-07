@@ -41,6 +41,7 @@ def main():
 
             a[f"event{i}"] = event[1][0]+ ";".join([champ2role[champ.lower()][0] for champ in event[3].split(";") if champ]) + event[4] + target
 
+
             x=1
         statsdf.append(a)
     statsdf = pd.DataFrame(statsdf)
