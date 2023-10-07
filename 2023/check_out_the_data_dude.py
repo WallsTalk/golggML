@@ -57,6 +57,7 @@ def main():
             except KeyError as e:
                 x=1
 
+
             x=1
         statsdf.append(a)
     statsdf = pd.DataFrame(statsdf)
