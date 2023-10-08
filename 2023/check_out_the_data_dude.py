@@ -4,14 +4,22 @@
 import json
 import pandas as pd
 import os
+import numpy as np
+import math
+
 
 def main():
-    season = "12"
-    current_game_colection = "game_collection2_" + season
-    with open(os.path.join(os.getcwd(), "work_history", current_game_colection), "r") as game_history:
-        game_history = [json.loads(game) for game in game_history.read().split("\n")[:-1]]
+    seasons = [str(i) for i in range(8, 14)]
+    game_history = []
+    for season in seasons:
+        current_game_colection = "game_collection3_" + season
+        with open(os.path.join(os.getcwd(), "work_history", current_game_colection), "r") as game_history_file:
+            game_history += [json.loads(game) for game in game_history_file.read().split("\n")[:-1]]
 
     statsdf = []
+    # with open(os.path.join(os.getcwd(), "event_dict.json"), "r") as event_file:
+    #     event_dict = json.load(event_file)
+    players = {}
     for game in game_history:
         a = {
             "teamB": game["blue_team"],
@@ -20,7 +28,11 @@ def main():
             "resR": game["red_result"],
 
         }
-        champ2role = {game["stats"]["champs"][i].replace(" ", "").lower(): game["stats"]["Role"][i] for i in range(10)}
+        if len(game["stats"]["Role"]) == 10 and len(game["stats"]["champs"]) == 10:
+            champ2role = {game["stats"]["champs"][i].replace(" ", "").lower(): game["stats"]["Role"][i] for i in range(10)}
+        else:
+            continue
+
         if "bel" in champ2role:
             champ2role["belveth"] = champ2role["bel"]
         if "kha" in champ2role:
@@ -33,6 +45,8 @@ def main():
             champ2role["kogmaw"] = champ2role["kog"]
         if "cho" in champ2role:
             champ2role["chogath"] = champ2role["cho"]
+        if "k" in champ2role:
+            champ2role["ksante"] = champ2role["k"]
 
         for stat, vals in game["stats"].items():
             stat_name = stat.replace(" ", "-").replace("@", "at").replace("%", "-proc").replace("'", "").replace(
@@ -43,19 +57,21 @@ def main():
                 else:
                     a[stat_name + "R" + game["stats"]["Role"][i][0]] = vals[i]
 
+
         for i in range(len(game["events"])):
             event = game["events"][i]
             a[f"time{i}"] = event[0]
-            try:
-                if event[5] == "kill;gold":
+
+            if "kill" in event[4] or "death" in event[4]:
+                if event[5]:
                     target = champ2role[event[5].lower()][0]
                 else:
-                    target = event[6]
+                    continue
+            else:
+                target = event[6]
 
+            a[f"event{i}"] = event[1][0] + ";".join([champ2role[champ.lower()][0] for champ in event[3].split(";") if champ]) + event[4] + target
 
-                    a[f"event{i}"] = event[1][0]+ ";".join([champ2role[champ.lower()][0] for champ in event[3].split(";") if champ]) + event[4] + target
-            except KeyError as e:
-                x=1
 
 
             x=1
@@ -63,6 +79,15 @@ def main():
     statsdf = pd.DataFrame(statsdf)
 
 
+    events = list(set([item for column in statsdf.columns[statsdf.columns.str.contains("event")] for item in statsdf[column].tolist() if type(item) != float]))
+    events_dict = {events[i]: (i if events[i][0] == "b" else 5000+i) for i in range(len(events))}
+    with open("event_dict.json", "a") as eventf:
+        json.dump(events_dict, eventf)
+
+    players = list(set([item for column in statsdf.columns[statsdf.columns.str.contains("player")] for item in statsdf[column].tolist()]))
+    players_dict = {players[i]: i for i in range(len(players))}
+    with open("player_dict.json", "a") as playerf:
+        json.dump(players_dict, playerf)
     #     b = { stat.replace(" ", "-").replace("@", "at").replace("%", "-proc").replace("'", "").replace("+", "").lower() + ("B" if i < 5 else "R") + game["stats"]["Role"][i][0]: vals[i] for stat, vals in game["stats"].items()}
     # statsdf = pd.DataFrame([{"teamB": game["blue_team"], "resB": game["blue_result"], "teamR": game["red_team"], "resR": game["red_result"]} | {stat.replace(" ", "-").replace("@", "at").replace("%", "-proc").replace("'", "").replace("+", "").lower() + ("B" if i < 5 else "R") + game["stats"]["Role"][i][0]: vals[i] for stat, vals in game["stats"].items() for
     #   i in range(10)} for game in game_history])
