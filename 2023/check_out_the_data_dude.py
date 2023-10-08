@@ -11,15 +11,17 @@ import math
 def main():
     seasons = [str(i) for i in range(8, 14)]
     game_history = []
-    for season in seasons:
+    for season in seasons[-1:]:
         current_game_colection = "game_collection3_" + season
         with open(os.path.join(os.getcwd(), "work_history", current_game_colection), "r") as game_history_file:
             game_history += [json.loads(game) for game in game_history_file.read().split("\n")[:-1]]
 
     statsdf = []
-    # with open(os.path.join(os.getcwd(), "event_dict.json"), "r") as event_file:
-    #     event_dict = json.load(event_file)
-    players = {}
+    with open(os.path.join(os.getcwd(), "event_dict.json"), "r") as event_file:
+        event_dict = json.load(event_file)
+    with open(os.path.join(os.getcwd(), "player.json"), "r") as event_file:
+        player_dict = json.load(event_file)
+
     for game in game_history:
         a = {
             "teamB": game["blue_team"],
@@ -57,6 +59,11 @@ def main():
                 else:
                     a[stat_name + "R" + game["stats"]["Role"][i][0]] = vals[i]
 
+        for player in range(len(game["stats"]["Player"])):
+            if i < 5:
+                a["pidB" + game["stats"]["Role"][i][0]] = player_dict[player[i]]
+            else:
+                a["pidR" + game["stats"]["Role"][i][0]] = player_dict[player[i]]
 
         for i in range(len(game["events"])):
             event = game["events"][i]
@@ -70,7 +77,7 @@ def main():
             else:
                 target = event[6]
 
-            a[f"event{i}"] = event[1][0] + ";".join([champ2role[champ.lower()][0] for champ in event[3].split(";") if champ]) + event[4] + target
+            a[f"event{i}"] = event_dict[event[1][0] + ";".join([champ2role[champ.lower()][0] for champ in event[3].split(";") if champ]) + event[4] + target]
 
 
 
@@ -78,16 +85,6 @@ def main():
         statsdf.append(a)
     statsdf = pd.DataFrame(statsdf)
 
-
-    events = list(set([item for column in statsdf.columns[statsdf.columns.str.contains("event")] for item in statsdf[column].tolist() if type(item) != float]))
-    events_dict = {events[i]: (i if events[i][0] == "b" else 5000+i) for i in range(len(events))}
-    with open("event_dict.json", "a") as eventf:
-        json.dump(events_dict, eventf)
-
-    players = list(set([item for column in statsdf.columns[statsdf.columns.str.contains("player")] for item in statsdf[column].tolist()]))
-    players_dict = {players[i]: i for i in range(len(players))}
-    with open("player_dict.json", "a") as playerf:
-        json.dump(players_dict, playerf)
     #     b = { stat.replace(" ", "-").replace("@", "at").replace("%", "-proc").replace("'", "").replace("+", "").lower() + ("B" if i < 5 else "R") + game["stats"]["Role"][i][0]: vals[i] for stat, vals in game["stats"].items()}
     # statsdf = pd.DataFrame([{"teamB": game["blue_team"], "resB": game["blue_result"], "teamR": game["red_team"], "resR": game["red_result"]} | {stat.replace(" ", "-").replace("@", "at").replace("%", "-proc").replace("'", "").replace("+", "").lower() + ("B" if i < 5 else "R") + game["stats"]["Role"][i][0]: vals[i] for stat, vals in game["stats"].items() for
     #   i in range(10)} for game in game_history])
