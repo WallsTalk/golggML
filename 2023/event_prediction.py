@@ -9,10 +9,9 @@ def main ():
     df["turney"] = df["turney"].apply(lambda x: x.split(" 20")[0])
     all_turneys = list(set(df["turney"].tolist()))
     all_turneys = {all_turneys[i]: i for i in range(len(all_turneys))}
+    df["turneyid"] = df.replace({"turney": all_turneys})["turney"]
     all_teams = list(set([item for col, vals in df[["teamB", "teamR"]].items() for item in vals.tolist()]))
     all_teams = {all_teams[i]: i for i in range(len(all_teams))}
-
-    df["turneyid"] = df.replace({"turney": all_turneys})["turney"]
     df["teamidB"] = df.replace({"teamB": all_teams})["teamB"]
     df["teamidR"] = df.replace({"teamR": all_teams})["teamR"]
 
@@ -34,7 +33,8 @@ def main ():
     }
     )
 
-    forest_model = RandomForestRegressor(n_estimators=3000, max_depth=50, warm_start=True)
+    time_model = RandomForestRegressor(warm_start=True, random_state=5)
+    event_model = RandomForestRegressor(n_estimators=1000, warm_start=True, random_state=5)
     i=0
 
     finished_df = pd.DataFrame(df.columns)
@@ -42,8 +42,8 @@ def main ():
         time_str = "time" + str(i)
         time = df[time_str]
 
-        forest_model.fit(season_df, time)
-        predict_df[time_str] = forest_model.predict(predict_df)
+        time_model.fit(season_df, time)
+        predict_df[time_str] = time_model.predict(predict_df)
         predict_df[time_str] = predict_df[time_str].apply(lambda x: round(x))
         season_df[time_str] = time
 
@@ -52,8 +52,8 @@ def main ():
         event_str = "event" + str(i)
         event = df[event_str]
 
-        forest_model.fit(season_df, event)
-        predict_df[event_str] = forest_model.predict(predict_df)
+        event_model.fit(season_df, event)
+        predict_df[event_str] = event_model.predict(predict_df)
         predict_df[event_str] = predict_df[event_str].apply(lambda match: min(events_dict, key=lambda x: abs(x-match)))
         season_df[event_str] = event
 

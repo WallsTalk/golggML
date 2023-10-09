@@ -17,15 +17,16 @@ def main():
             game_history += [json.loads(game) for game in game_history_file.read().split("\n")[:-1]]
 
     statsdf = []
-    with open(os.path.join(os.getcwd(), "event_dict.json"), "r") as event_file:
-        event_dict = json.load(event_file)
+    # with open(os.path.join(os.getcwd(), "event_dict.json"), "r") as event_file:
+    #     event_dict = json.load(event_file)
     with open(os.path.join(os.getcwd(), "player_dict.json"), "r") as event_file:
         player_dict = json.load(event_file)
-
+    events_dict = {}
     for game in game_history:
         a = {
             "season": game["season"],
             "turney": game["turney"],
+            "gameid": game["game_id"],
             "teamB": game["blue_team"],
             "resB": game["blue_result"],
             "teamR": game["red_team"],
@@ -70,10 +71,16 @@ def main():
                 else:
                     a[stat_name + "R" + game["stats"]["Role"][i][0]] = vals[i]
 
-
+        drained_events = 0
         for i in range(len(game["events"])):
             event = game["events"][i]
-            a[f"time{i}"] = int(event[0].split(":")[0])*60 + int(event[0].split(":")[1])
+            if "PLATE" == event[4]:
+                drained_events +=1
+                continue
+            minutes = int(event[0].split(":")[0])
+            seconds = int(event[0].split(":")[1])
+            a[f"time{i-drained_events}"] = minutes*60 + seconds
+
 
             if "kill" in event[4] or "death" in event[4]:
                 if event[5]:
@@ -83,14 +90,98 @@ def main():
             else:
                 target = event[6]
 
-            a[f"event{i}"] = int(event_dict[event[1][0] + ";".join([champ2role[champ.lower()][0] for champ in event[3].split(";") if champ]) + event[4] + target])
+            actors = [champ2role[champ.lower()][0] for champ in event[3].split(";") if champ]
+            a[f"event{i-drained_events}"] = event[1][0] + ";".join(actors) + event[4].replace("gold", "") + target
+            x=1
+            if event[1][0] == "b":
+                team_cof = 0
+            else:
+                team_cof = 500000
+            # kill, dragon, herald, tower, baron, inhib, nexus
+            event_cof = 0
 
+            actor_cof = 0
+            target_cof = 0
+            if actors:
+                if actors[0] == "T":
+                    actor_cof = 100
+                elif actors[0] == "J":
+                    actor_cof = 300
+                elif actors[0] == "M":
+                    actor_cof = 500
+                elif actors[0] == "A":
+                    actor_cof = 700
+                elif actors[0] == "S":
+                    actor_cof = 900
+                actor_cof += len(actors) - 1
+                if target == "T":
+                    target_cof = 10
+                if target == "J":
+                    target_cof = 30
+                if target == "M":
+                    target_cof = 50
+                if target == "A":
+                    target_cof = 70
+                if target == "S":
+                    target_cof = 90
+
+
+            if "dragon" in event[4]:
+                event_cof = 20000
+            elif "herald" == event[4]:
+                event_cof = 30000
+            elif "tower" == event[4]:
+                actor_cof = actor_cof//10
+                event_cof = 50000
+                if "NEXUS" in target:
+                    target_cof = 9000
+                elif "T3" in target:
+                    target_cof = 0
+                elif "T2" in target:
+                    target_cof = 3000
+                elif "T1" in target:
+                    target_cof = 6000
+                if "TOP" in target:
+                    target_cof += 300
+                elif "MID" in target:
+                    target_cof += 600
+                elif "BOT" in target:
+                    target_cof += 900
+
+            elif "inhib" == event[4]:
+                actor_cof = actor_cof / 10
+                event_cof = 70000
+                if "TOP" in target:
+                    target_cof = 300
+                elif "MID" in target:
+                    target_cof += 600
+                elif "BOT" in target:
+                    target_cof += 900
+            elif "baron" == event[4]:
+                event_cof = 80000
+            elif "nexus" == event[4]:
+                event_cof = 90000
+
+            a[f"eventid{i-drained_events}"] = (minutes+1)*1000000 + team_cof + event_cof + actor_cof + target_cof
+            #a[f"eventid{i}"] = int(event_dict[event[1][0] + ";".join([champ2role[champ.lower()][0] for champ in event[3].split(";") if champ]) + event[4] + target])
 
 
             x=1
         statsdf.append(a)
+
     statsdf = pd.DataFrame(statsdf)
-    statsdf.to_csv("decent_data.csv", sep=",", index=False)
+    statsdf["turney"] = statsdf["turney"].apply(lambda x: x.split(" 20")[0])
+    all_turneys = list(set(statsdf["turney"].tolist()))
+    all_turneys = {all_turneys[i]: i for i in range(len(all_turneys))}
+    statsdf["turneyid"] = statsdf.replace({"turney": all_turneys})["turney"]
+    all_teams = list(set([item for col, vals in statsdf[["teamB", "teamR"]].items() for item in vals.tolist()]))
+    all_teams = {all_teams[i]: i for i in range(len(all_teams))}
+    statsdf["teamidB"] = statsdf.replace({"teamB": all_teams})["teamB"]
+    statsdf["teamidR"] = statsdf.replace({"teamR": all_teams})["teamR"]
+    statsdf["result"] = statsdf["resB"].apply(lambda x: 1 if x == "WIN" else 0)
+
+
+    statsdf.to_csv("decent_data2.csv", sep=",", index=False)
     #     b = { stat.replace(" ", "-").replace("@", "at").replace("%", "-proc").replace("'", "").replace("+", "").lower() + ("B" if i < 5 else "R") + game["stats"]["Role"][i][0]: vals[i] for stat, vals in game["stats"].items()}
     # statsdf = pd.DataFrame([{"teamB": game["blue_team"], "resB": game["blue_result"], "teamR": game["red_team"], "resR": game["red_result"]} | {stat.replace(" ", "-").replace("@", "at").replace("%", "-proc").replace("'", "").replace("+", "").lower() + ("B" if i < 5 else "R") + game["stats"]["Role"][i][0]: vals[i] for stat, vals in game["stats"].items() for
     #   i in range(10)} for game in game_history])
