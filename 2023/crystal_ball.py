@@ -4,6 +4,7 @@ from sklearn.ensemble import RandomForestRegressor
 import os
 import numpy as np
 import re
+import json
 
 
 df = pd.read_csv(os.path.join(os.getcwd(),"2023", 'decent_data2.csv'))
@@ -73,8 +74,8 @@ del events
 # pentas
 for season in seasons:
     player_dict = {}
-    pentas = df.loc[(~df["turney"].str.contains("World")) & (df["season"] == season), list(df.filter(regex="penta-kills").columns)].to_numpy()
-    players = df.loc[(~df["turney"].str.contains("World")) & (df["season"] == season), list(df.filter(regex="player").columns)].to_numpy()
+    pentas = df.loc[(df["turney"].str.contains("World")) & (df["season"] == season), list(df.filter(regex="penta-kills").columns)].to_numpy()
+    players = df.loc[(df["turney"].str.contains("World")) & (df["season"] == season), list(df.filter(regex="player").columns)].to_numpy()
     for g in range(len(pentas)):
         for p in range(len(pentas[g])):
             if pentas[g][p] > 0:
@@ -85,19 +86,44 @@ for season in seasons:
 
 
 # Who will play the most different Champions at Worlds?
+turneys= {}
+for season in seasons:
+    kills = df.loc[~(df["turney"].str.contains("World")) & (df["season"] == season), list(df.filter(regex="^kills").columns)].to_numpy()
+    players = df.loc[~(df["turney"].str.contains("World")) & (df["season"] == season), list(df.filter(regex="player").columns)].to_numpy()
+    turney_max = {0:[]}
+    for k in range(len(kills)):
+        if max(kills[k]) >= min(turney_max):
+            for p in range(len(kills[k])):
+                if kills[k][p] == max(kills[k]):
+                    if int(max(kills[k])) not in turney_max:
+                        turney_max[int(max(kills[k]))] = []
+                    turney_max[int(max(kills[k]))].append(players[k][p])
+            if len(turney_max) > 5:
+                turney_max_l = sorted(turney_max, reverse=True)
+                turney_max.pop(turney_max_l[5])
+
+    turney_max_l = sorted(turney_max, reverse=True)
+    turney_max = {i: turney_max[i] for i in turney_max_l}
+    print(season, json.dumps(turney_max, indent=2))
+
+# Who will have the highest KDA at Worlds?
+
 for season in seasons:
     player_dict = {}
-    kills = df.loc[(~df["turney"].str.contains("World")) & (df["season"] == season), list(df.filter(regex="^kills").columns)].to_numpy()
-    players = df.loc[(~df["turney"].str.contains("World")) & (df["season"] == season), list(df.filter(regex="player").columns)].to_numpy()
+    kills = df.loc[~(df["turney"].str.contains("World")) & (df["season"] == season), list(df.filter(regex="^kills").columns)].to_numpy()
+    assists = df.loc[~(df["turney"].str.contains("World")) & (df["season"] == season), list(df.filter(regex="^assists").columns)].to_numpy()
+    deaths = df.loc[~(df["turney"].str.contains("World")) & (df["season"] == season), list(df.filter(regex="^deaths").columns)].to_numpy()
+    players = df.loc[~(df["turney"].str.contains("World")) & (df["season"] == season), list(df.filter(regex="player").columns)].to_numpy()
+    turney_max = {0:[]}
     for k in range(len(kills)):
-        game_max = max(kills[k])
-        print(game_max)
         for p in range(len(kills[k])):
-            if kills[k][p] == game_max:
-                if players[g][p] not in player_dict:
-                    player_dict[players[k][p]] = 0
-                    player_dict[players[k][p]] += 1
+            if players[k][p] not in player_dict:
 
+        #kda = [(kills[k][p]+assists[k][p])/(deaths[k][p]+1) for p in range(len(kills)) ]
+
+
+
+    print(season, json.dumps(turney_max, indent=2))
 
 
 
