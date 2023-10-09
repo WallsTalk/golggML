@@ -50,6 +50,9 @@ for season in seasons:
     times = [times[i][j] for i in range(len(events)) for j in range(len(events[i])) if events[i][j] in ['rnexus', 'bnexus']]
     print(season, max(times)//60, max(times)%60)
 
+del times
+del events
+
 
 # pentakills
 
@@ -57,10 +60,44 @@ for season in seasons:
 # dragons
 rex = "ocean-dragon|cloud-dragon|elder-dragon|fire-dragon|hextech-dragon|mountain-dragon|chemtech-dragon".split("|")
 for season in seasons:
-    events = df.loc[(~df["turney"].str.contains("World")) & (df["season"] == season), ["season"] + list(df.filter(regex="event[0-9]+").columns)].to_numpy()
+    events = df.loc[(~df["turney"].str.contains("World")) & (df["season"] == season), list(df.filter(regex="event[0-9]+").columns)].to_numpy()
     events = [[k for k in rex if k in events[i][j]][0] for i in range(len(events)) for j in range(len(events[i])) if "dragon" in str(events[i][j]) ]
     dragons = np.unique(events, return_counts=True)
     print(season, {dragons[0][i]:dragons[1][i] for i in range(len(dragons[0]))})
+
+del dragons
+del events
+
+
+
+# pentas
+for season in seasons:
+    player_dict = {}
+    pentas = df.loc[(~df["turney"].str.contains("World")) & (df["season"] == season), list(df.filter(regex="penta-kills").columns)].to_numpy()
+    players = df.loc[(~df["turney"].str.contains("World")) & (df["season"] == season), list(df.filter(regex="player").columns)].to_numpy()
+    for g in range(len(pentas)):
+        for p in range(len(pentas[g])):
+            if pentas[g][p] > 0:
+                if players[g][p] not in player_dict:
+                    player_dict[players[g][p]] = 0
+                player_dict[players[g][p]] += 1
+    print(season, player_dict)
+
+
+# Who will play the most different Champions at Worlds?
+for season in seasons:
+    player_dict = {}
+    kills = df.loc[(~df["turney"].str.contains("World")) & (df["season"] == season), list(df.filter(regex="^kills").columns)].to_numpy()
+    players = df.loc[(~df["turney"].str.contains("World")) & (df["season"] == season), list(df.filter(regex="player").columns)].to_numpy()
+    for k in range(len(kills)):
+        game_max = max(kills[k])
+        print(game_max)
+        for p in range(len(kills[k])):
+            if kills[k][p] == game_max:
+                if players[g][p] not in player_dict:
+                    player_dict[players[k][p]] = 0
+                    player_dict[players[k][p]] += 1
+
 
 
 
