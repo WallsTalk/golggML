@@ -17,12 +17,10 @@ def main():
             game_history += [json.loads(game) for game in game_history_file.read().split("\n")[:-1]]
 
     statsdf = []
-    # with open(os.path.join(os.getcwd(), "event_dict.json"), "r") as event_file:
-    #     event_dict = json.load(event_file)
     with open(os.path.join(os.getcwd(), "player_dict.json"), "r") as event_file:
         player_dict = json.load(event_file)
-    events_dict = {}
-    for game in game_history:
+
+    for game in game_history[-1:]:
         a = {
             "season": game["season"],
             "turney": game["turney"],
