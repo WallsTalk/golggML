@@ -3,6 +3,7 @@ import pandas as pd
 from sklearn.ensemble import RandomForestRegressor
 import os
 import numpy as np
+import re
 
 
 df = pd.read_csv(os.path.join(os.getcwd(),"2023", 'decent_data2.csv'))
@@ -44,8 +45,8 @@ del x2
 
 # longest game
 for season in seasons:
-    times = df.loc[(df["turney"].str.contains("World")) & (df["season"] == season), ["season"] + list(df.filter(regex="time[0-9]+").columns)].to_numpy()
-    events = df.loc[(df["turney"].str.contains("World")) & (df["season"] == season), ["season"] + list(df.filter(regex="event[0-9]+").columns)].to_numpy()
+    times = df.loc[(~df["turney"].str.contains("World")) & (df["season"] == season), ["season"] + list(df.filter(regex="time[0-9]+").columns)].to_numpy()
+    events = df.loc[(~df["turney"].str.contains("World")) & (df["season"] == season), ["season"] + list(df.filter(regex="event[0-9]+").columns)].to_numpy()
     times = [times[i][j] for i in range(len(events)) for j in range(len(events[i])) if events[i][j] in ['rnexus', 'bnexus']]
     print(season, max(times)//60, max(times)%60)
 
@@ -54,11 +55,12 @@ for season in seasons:
 
 
 # dragons
+rex = "ocean-dragon|cloud-dragon|elder-dragon|fire-dragon|hextech-dragon|mountain-dragon|chemtech-dragon".split("|")
 for season in seasons:
-    events = df.loc[(df["turney"].str.contains("World")) & (df["season"] == season), ["season"] + list(df.filter(regex="event[0-9]+").columns)].to_numpy()
-    events = [events[i][j][2:] for i in range(len(events)) for j in range(len(events[i])) if "dragon" in str(events[i][j])]
-    print(season, np.unique(events, return_counts=True)[0])
-
+    events = df.loc[(~df["turney"].str.contains("World")) & (df["season"] == season), ["season"] + list(df.filter(regex="event[0-9]+").columns)].to_numpy()
+    events = [[k for k in rex if k in events[i][j]][0] for i in range(len(events)) for j in range(len(events[i])) if "dragon" in str(events[i][j]) ]
+    dragons = np.unique(events, return_counts=True)
+    print(season, {dragons[0][i]:dragons[1][i] for i in range(len(dragons[0]))})
 
 
 
