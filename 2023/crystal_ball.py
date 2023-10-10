@@ -236,6 +236,52 @@ for season in seasons:
     champs_dict = {}
     cond = (~df["turney"].str.contains("World")) & (df["season"] == season)
     champs = df.loc[cond, list(df.filter(regex="^champs").columns)].to_numpy()
-
+    result = df.loc[cond, ["result"]].to_numpy()
     for k in range(len(champs)):
-        for p in range(len(champs[k])):
+        if result[k][0] == 1:
+            win = (0, 5)
+            loose = (5, 9)
+        else:
+            win = (5, 9)
+            loose = (0, 5)
+        for p in range(*win):
+            if champs[k][p] not in champs_dict:
+                champs_dict[champs[k][p]] = []
+            champs_dict[champs[k][p]].append(1)
+        for p in range(*loose):
+            if champs[k][p] not in champs_dict:
+                champs_dict[champs[k][p]] = []
+            champs_dict[champs[k][p]].append(0)
+
+    champs_dict = {champ: (sum(h)/len(h), len(h)) for champ,h in champs_dict.items() if len(h) >=5}
+    print(season, sorted(champs_dict.items(), key=lambda x: x[1], reverse=True))
+
+
+# Which team will win the shortest game (duration) at Worlds?
+for season in seasons:
+    teams_dict = {}
+    cond = (~df["turney"].str.contains("World")) & (df["season"] == season) & (df["time0"].notnull())
+    times = df.loc[cond, ["season"] + list(df.filter(regex="time[0-9]+").columns)].to_numpy()
+    events = df.loc[cond, ["season"] + list(df.filter(regex="event[0-9]+").columns)].to_numpy()
+    teams = df.loc[cond, list(df.filter(regex="team[RB]").columns)].to_numpy()
+    times = [times[i][j] for i in range(len(events)) for j in range(len(events[i])) if events[i][j] in ['rnexus', 'bnexus']]
+    results = df.loc[cond, ["result"]].to_numpy()
+
+    for k in range(len(results)):
+        if results[k][0] == 1:
+            if teams[k][0] not in teams_dict:
+                teams_dict[teams[k][0]] = []
+            teams_dict[teams[k][0]].append(times[k])
+        else:
+            if teams[k][1] not in teams_dict:
+                teams_dict[teams[k][1]] = []
+            teams_dict[teams[k][1]].append(times[k])
+
+
+    teams_dict = {team: min(times) for team, times in teams_dict.items()}
+    teams_dict = dict(sorted(teams_dict.items(), key=lambda x: x[1], reverse=False))
+    teams_dict = {team: (time//60, time%60) for team, time in teams_dict.items()}
+    print(season, teams_dict)
+
+del times
+del events
