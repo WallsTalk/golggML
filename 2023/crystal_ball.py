@@ -46,8 +46,9 @@ del x2
 
 # longest game
 for season in seasons:
-    times = df.loc[(~df["turney"].str.contains("World")) & (df["season"] == season), ["season"] + list(df.filter(regex="time[0-9]+").columns)].to_numpy()
-    events = df.loc[(~df["turney"].str.contains("World")) & (df["season"] == season), ["season"] + list(df.filter(regex="event[0-9]+").columns)].to_numpy()
+    cond = (~df["turney"].str.contains("World")) & (df["season"] == season)
+    times = df.loc[cond, ["season"] + list(df.filter(regex="time[0-9]+").columns)].to_numpy()
+    events = df.loc[cond, ["season"] + list(df.filter(regex="event[0-9]+").columns)].to_numpy()
     times = [times[i][j] for i in range(len(events)) for j in range(len(events[i])) if events[i][j] in ['rnexus', 'bnexus']]
     print(season, max(times)//60, max(times)%60)
 
@@ -61,7 +62,8 @@ del events
 # dragons
 rex = "ocean-dragon|cloud-dragon|elder-dragon|fire-dragon|hextech-dragon|mountain-dragon|chemtech-dragon".split("|")
 for season in seasons:
-    events = df.loc[(~df["turney"].str.contains("World")) & (df["season"] == season), list(df.filter(regex="event[0-9]+").columns)].to_numpy()
+    cond = (~df["turney"].str.contains("World")) & (df["season"] == season)
+    events = df.loc[cond, list(df.filter(regex="event[0-9]+").columns)].to_numpy()
     events = [[k for k in rex if k in events[i][j]][0] for i in range(len(events)) for j in range(len(events[i])) if "dragon" in str(events[i][j]) ]
     dragons = np.unique(events, return_counts=True)
     print(season, {dragons[0][i]:dragons[1][i] for i in range(len(dragons[0]))})
@@ -74,8 +76,9 @@ del events
 # pentas
 for season in seasons:
     player_dict = {}
-    pentas = df.loc[(df["turney"].str.contains("World")) & (df["season"] == season), list(df.filter(regex="penta-kills").columns)].to_numpy()
-    players = df.loc[(df["turney"].str.contains("World")) & (df["season"] == season), list(df.filter(regex="player").columns)].to_numpy()
+    cond = (~df["turney"].str.contains("World")) & (df["season"] == season)
+    pentas = df.loc[cond, list(df.filter(regex="penta-kills").columns)].to_numpy()
+    players = df.loc[cond, list(df.filter(regex="player").columns)].to_numpy()
     for g in range(len(pentas)):
         for p in range(len(pentas[g])):
             if pentas[g][p] > 0:
@@ -88,8 +91,9 @@ for season in seasons:
 # Who will play the most different Champions at Worlds?
 turneys= {}
 for season in seasons:
-    kills = df.loc[~(df["turney"].str.contains("World")) & (df["season"] == season), list(df.filter(regex="^kills").columns)].to_numpy()
-    players = df.loc[~(df["turney"].str.contains("World")) & (df["season"] == season), list(df.filter(regex="player").columns)].to_numpy()
+    cond = (~df["turney"].str.contains("World")) & (df["season"] == season)
+    kills = df.loc[cond, list(df.filter(regex="^kills").columns)].to_numpy()
+    players = df.loc[cond, list(df.filter(regex="player").columns)].to_numpy()
     turney_max = {0:[]}
     for k in range(len(kills)):
         if max(kills[k]) >= min(turney_max):
@@ -110,10 +114,11 @@ for season in seasons:
 
 for season in seasons:
     player_dict = {}
-    kills = df.loc[(~df["turney"].str.contains("World")) & (df["season"] == season), list(df.filter(regex="^kills").columns)].to_numpy()
-    assists = df.loc[(~df["turney"].str.contains("World")) & (df["season"] == season), list(df.filter(regex="^assists").columns)].to_numpy()
-    deaths = df.loc[(~df["turney"].str.contains("World")) & (df["season"] == season), list(df.filter(regex="^deaths").columns)].to_numpy()
-    players = df.loc[(~df["turney"].str.contains("World")) & (df["season"] == season), list(df.filter(regex="player").columns)].to_numpy()
+    cond = (~df["turney"].str.contains("World")) & (df["season"] == season)
+    kills = df.loc[cond, list(df.filter(regex="^kills").columns)].to_numpy()
+    assists = df.loc[cond, list(df.filter(regex="^assists").columns)].to_numpy()
+    deaths = df.loc[cond, list(df.filter(regex="^deaths").columns)].to_numpy()
+    players = df.loc[cond, list(df.filter(regex="player").columns)].to_numpy()
 
     for k in range(len(kills)):
         for p in range(len(kills[k])):
