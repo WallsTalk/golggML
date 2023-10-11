@@ -13,7 +13,7 @@ def main():
     with open(os.path.join(os.getcwd(), "turneys", season), "r") as turneys2023:
         turneys2023 = turneys2023.read().split("\n")
 
-    current_game_colection = "game_collection2_" + season
+    current_game_colection = "game_collection_worlds_" + season
     with open(os.path.join(os.getcwd(), "history", current_game_colection), "r") as game_history:
         game_history = [json.loads(game)["game_id"] for game in game_history.read().split("\n")[:-1]]
 
@@ -23,7 +23,7 @@ def main():
             print(turney)
             turney_soup = BeautifulSoup(requests.get("https://gol.gg/tournament/tournament-matchlist/"+turney.replace(" ", "%20")).text, "lxml")
             matches = [
-                [int(tr.find("a")["href"].split("/")[3]) + game for game in range(sum([int(score) for score in tr.find("td", attrs={"class": "text-center"}).text.split('-')]))]
+                [int(tr.find("a")["href"].split("/")[3]) + game for game in range(sum([int(score) for score in tr.find("td", attrs={"class": "text-center"}).text.split('-') if tr.find("td", attrs={"class": "text-center"}).text != " - "]))]
                 for tr in turney_soup.find("table", attrs={"class": ['table_list', 'footable', 'toggle-square-filled']}).find("tbody").find_all("tr")
             ]
             # returns list of matches [53505, 53506, 53507]

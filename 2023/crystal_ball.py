@@ -7,7 +7,8 @@ import re
 import json
 
 
-df = pd.read_csv(os.path.join(os.getcwd(),"2023", 'decent_data2.csv'))
+# df = pd.read_csv(os.path.join(os.getcwd(),"2023", 'decent_data2.csv'))
+df = pd.read_csv(os.path.join(os.getcwd(), 'temp.csv'))
 seasons = list(set(df["season"].tolist()))
 df[df.filter(regex="event[0-9]+").columns].apply(lambda x: x.astype("string", errors='ignore'))
 
@@ -44,9 +45,10 @@ del s
 del x
 del x2
 
-# longest game
+
+print("\n\n\n# longest game")
 for season in seasons:
-    cond = (~df["turney"].str.contains("World")) & (df["season"] == season)
+    cond = (df["turney"].str.contains("World")) & (df["season"] == season)
     times = df.loc[cond, ["season"] + list(df.filter(regex="time[0-9]+").columns)].to_numpy()
     events = df.loc[cond, ["season"] + list(df.filter(regex="event[0-9]+").columns)].to_numpy()
     times = [times[i][j] for i in range(len(events)) for j in range(len(events[i])) if events[i][j] in ['rnexus', 'bnexus']]
@@ -59,10 +61,11 @@ del events
 # pentakills
 
 
-# dragons
+
+print("\n\n\ndragons")
 rex = "ocean-dragon|cloud-dragon|elder-dragon|fire-dragon|hextech-dragon|mountain-dragon|chemtech-dragon".split("|")
 for season in seasons:
-    cond = (~df["turney"].str.contains("World")) & (df["season"] == season)
+    cond = (df["turney"].str.contains("World")) & (df["season"] == season)
     events = df.loc[cond, list(df.filter(regex="event[0-9]+").columns)].to_numpy()
     events = [[k for k in rex if k in events[i][j]][0] for i in range(len(events)) for j in range(len(events[i])) if "dragon" in str(events[i][j]) ]
     dragons = np.unique(events, return_counts=True)
@@ -73,10 +76,10 @@ del events
 
 
 
-# pentas
+print("\n\n\npentas")
 for season in seasons:
     player_dict = {}
-    cond = (~df["turney"].str.contains("World")) & (df["season"] == season)
+    cond = (df["turney"].str.contains("World")) & (df["season"] == season)
     pentas = df.loc[cond, list(df.filter(regex="penta-kills").columns)].to_numpy()
     players = df.loc[cond, list(df.filter(regex="player").columns)].to_numpy()
     for g in range(len(pentas)):
@@ -88,10 +91,11 @@ for season in seasons:
     print(season, player_dict)
 
 
-# Who will play the most different Champions at Worlds?
+
+print("\n\n\n# Highest kills in a single game?")
 turneys= {}
 for season in seasons:
-    cond = (~df["turney"].str.contains("World")) & (df["season"] == season)
+    cond = (df["turney"].str.contains("World")) & (df["season"] == season)
     kills = df.loc[cond, list(df.filter(regex="^kills").columns)].to_numpy()
     players = df.loc[cond, list(df.filter(regex="player").columns)].to_numpy()
     turney_max = {0:[]}
@@ -108,13 +112,13 @@ for season in seasons:
 
     turney_max_l = sorted(turney_max, reverse=True)
     turney_max = {i: turney_max[i] for i in turney_max_l}
-    print(season, turney_max, indent=2)
+    print(season, turney_max)
 
-# Who will have the highest KDA at Worlds?
 
+print("\n\n\n# Who will have the highest KDA at Worlds?")
 for season in seasons:
     player_dict = {}
-    cond = (~df["turney"].str.contains("World")) & (df["season"] == season)
+    cond = (df["turney"].str.contains("World")) & (df["season"] == season)
     kills = df.loc[cond, list(df.filter(regex="^kills").columns)].to_numpy()
     assists = df.loc[cond, list(df.filter(regex="^assists").columns)].to_numpy()
     deaths = df.loc[cond, list(df.filter(regex="^deaths").columns)].to_numpy()
@@ -127,13 +131,14 @@ for season in seasons:
             player_dict[players[k][p]]["k"] += kills[k][p]
             player_dict[players[k][p]]["d"] += deaths[k][p]
             player_dict[players[k][p]]["a"] += assists[k][p]
+    player_dict = {player: ((s["k"] + s["a"])/s["d"] if s["d"] != 0 else 1000000) for player, s in player_dict.items()}
+    print(season,  sorted(player_dict.items(), key=lambda x:x[1], reverse=True)[:10])
 
-    print(season,  sorted(player_dict.items(), key=lambda x:x[1], reverse=True))
-## Who will play the most different Champions at Worlds?
 
+print("\n\n\n## Who will play the most different Champions at Worlds?")
 for season in seasons:
     player_dict = {}
-    cond = (~df["turney"].str.contains("World")) & (df["season"] == season)
+    cond = (df["turney"].str.contains("World")) & (df["season"] == season)
     champs = df.loc[cond, list(df.filter(regex="^assists").columns)].to_numpy()
     players = df.loc[cond, list(df.filter(regex="player").columns)].to_numpy()
 
@@ -146,12 +151,12 @@ for season in seasons:
 
     for player, champs in player_dict.items():
         player_dict[player] = len(champs)
-    print(season,  sorted(player_dict.items(), key=lambda x:x[1], reverse=True))
+    print(season,  sorted(player_dict.items(), key=lambda x:x[1], reverse=True)[:10])
 
-# Which team will play the most different Champions at Worlds?
 
+print("\n\n\n# Which team will play the most different Champions at Worlds?")
 for season in seasons:
-    cond = (~df["turney"].str.contains("World")) & (df["season"] == season)
+    cond = (df["turney"].str.contains("World")) & (df["season"] == season)
     champs = df.loc[cond, list(df.filter(regex="^champs").columns)].to_numpy()
     teams = df.loc[cond, list(df.filter(regex="team[RB]").columns)].to_numpy()
 
@@ -173,10 +178,11 @@ for season in seasons:
     print(season, sorted(team_champs.items(), key=lambda x: x[1], reverse=True))
 
 
-# Who will have the most total Deaths at Worlds?
+
+print("\n\n\n# Who will have the most total Deaths at Worlds?")
 for season in seasons:
     champs_dict = {}
-    cond = (~df["turney"].str.contains("World")) & (df["season"] == season)
+    cond = (df["turney"].str.contains("World")) & (df["season"] == season)
     deaths = df.loc[cond, list(df.filter(regex="^deaths").columns)].to_numpy()
     champs = df.loc[cond, list(df.filter(regex="^champs").columns)].to_numpy()
 
@@ -187,12 +193,13 @@ for season in seasons:
 
             champs_dict[champs[k][p]] += deaths[k][p]
 
-    print(season, sorted(champs_dict.items(), key=lambda x: x[1], reverse=True))
+    print(season, sorted(champs_dict.items(), key=lambda x: x[1], reverse=True)[:10])
 
-# Who will be Picked the most during Champion Select at Worlds?
+
+print("\n\n\n# Who will be Picked the most during Champion Select at Worlds?")
 for season in seasons:
     champs_dict = {}
-    cond = (~df["turney"].str.contains("World")) & (df["season"] == season)
+    cond = (df["turney"].str.contains("World")) & (df["season"] == season)
     champs = df.loc[cond, list(df.filter(regex="^champs").columns)].to_numpy()
 
     for k in range(len(champs)):
@@ -201,13 +208,14 @@ for season in seasons:
                 champs_dict[champs[k][p]] = 0
 
             champs_dict[champs[k][p]] += 1
-    print(season, sorted(champs_dict.items(), key=lambda x: x[1], reverse=True))
+    print(season, sorted(champs_dict.items(), key=lambda x: x[1], reverse=True)[:10])
 
-# Who will be played in the most different Roles at Worlds?
 
+
+print("\n\n\n# Who will be played in the most different Roles at Worlds?")
 for season in seasons:
     champs_dict = {}
-    cond = (~df["turney"].str.contains("World")) & (df["season"] == season)
+    cond = (df["turney"].str.contains("World")) & (df["season"] == season)
     champs = df.loc[cond, list(df.filter(regex="^champs").columns)].to_numpy()
 
     for k in range(len(champs)):
@@ -231,15 +239,15 @@ for season in seasons:
                     champs_dict[champs[k][p]].append("s")
 
 
-    champs_dict = {champ: len(champs_dict[champ]) for champ in champs_dict}
+    champs_dict = {champ: len(champs_dict[champ]) for champ in champs_dict if len(champs_dict[champ])>1}
     print(season, sorted(champs_dict.items(), key=lambda x: x[1], reverse=True))
 
 
-#Who will have the highest Win rate at Worlds? (Minimum 5 games played)
 
+print("\n\n\n#Who will have the highest Win rate at Worlds? (Minimum 5 games played)")
 for season in seasons:
     champs_dict = {}
-    cond = (~df["turney"].str.contains("World")) & (df["season"] == season)
+    cond = (df["turney"].str.contains("World")) & (df["season"] == season)
     champs = df.loc[cond, list(df.filter(regex="^champs").columns)].to_numpy()
     result = df.loc[cond, ["result"]].to_numpy()
     for k in range(len(champs)):
@@ -262,10 +270,11 @@ for season in seasons:
     print(season, sorted(champs_dict.items(), key=lambda x: x[1], reverse=True))
 
 
-# Which team will win the shortest game (duration) at Worlds?
+
+print("\n\n\n# Which team will win the shortest game (duration) at Worlds?")
 for season in seasons:
     teams_dict = {}
-    cond = (~df["turney"].str.contains("World")) & (df["season"] == season) & (df["time0"].notnull())
+    cond = (df["turney"].str.contains("World")) & (df["season"] == season) & (df["time0"].notnull())
     times = df.loc[cond, ["season"] + list(df.filter(regex="time[0-9]+").columns)].to_numpy()
     events = df.loc[cond, ["season"] + list(df.filter(regex="event[0-9]+").columns)].to_numpy()
     teams = df.loc[cond, list(df.filter(regex="team[RB]").columns)].to_numpy()

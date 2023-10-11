@@ -11,16 +11,19 @@ import math
 def main():
     seasons = [str(i) for i in range(8, 14)]
     game_history = []
-    for season in seasons:
-        current_game_colection = "game_collection3_" + season
-        with open(os.path.join(os.getcwd(), "work_history", current_game_colection), "r") as game_history_file:
-            game_history += [json.loads(game) for game in game_history_file.read().split("\n")[:-1]]
+    # for season in seasons:
+    #     current_game_colection = "game_collection3_" + season
+    #     with open(os.path.join(os.getcwd(), "work_history", current_game_colection), "r") as game_history_file:
+    #         game_history += [json.loads(game) for game in game_history_file.read().split("\n")[:-1]]
+    with open(os.path.join(os.getcwd(), "history", "game_collection_worlds_13"), "r") as game_history_file:
+        game_history += [json.loads(game) for game in game_history_file.read().split("\n")[:-1]]
+
 
     statsdf = []
     with open(os.path.join(os.getcwd(), "player_dict.json"), "r") as event_file:
         player_dict = json.load(event_file)
 
-    for game in game_history[-1:]:
+    for game in game_history:
         a = {
             "season": game["season"],
             "turney": game["turney"],
@@ -164,8 +167,9 @@ def main():
             #a[f"eventid{i}"] = int(event_dict[event[1][0] + ";".join([champ2role[champ.lower()][0] for champ in event[3].split(";") if champ]) + event[4] + target])
 
 
-            x=1
+        x=1
         statsdf.append(a)
+
 
     statsdf = pd.DataFrame(statsdf)
     statsdf["turney"] = statsdf["turney"].apply(lambda x: x.split(" 20")[0])
@@ -178,8 +182,8 @@ def main():
     statsdf["teamidR"] = statsdf.replace({"teamR": all_teams})["teamR"]
     statsdf["result"] = statsdf["resB"].apply(lambda x: 1 if x == "WIN" else 0)
 
-
-    statsdf.to_csv("decent_data2.csv", sep=",", index=False)
+    print(statsdf.shape)
+    statsdf.to_csv("temp.csv", sep=",", index=False)
     #     b = { stat.replace(" ", "-").replace("@", "at").replace("%", "-proc").replace("'", "").replace("+", "").lower() + ("B" if i < 5 else "R") + game["stats"]["Role"][i][0]: vals[i] for stat, vals in game["stats"].items()}
     # statsdf = pd.DataFrame([{"teamB": game["blue_team"], "resB": game["blue_result"], "teamR": game["red_team"], "resR": game["red_result"]} | {stat.replace(" ", "-").replace("@", "at").replace("%", "-proc").replace("'", "").replace("+", "").lower() + ("B" if i < 5 else "R") + game["stats"]["Role"][i][0]: vals[i] for stat, vals in game["stats"].items() for
     #   i in range(10)} for game in game_history])
