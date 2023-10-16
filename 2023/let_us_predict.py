@@ -29,14 +29,15 @@ for season in seasons:
 
 condition_nw = (~df["turney"].str.contains("World"))
 for season in seasons:
-    season = df.loc[df["season"] == season, :]
-    season[learning_cols] = season.loc[:, learning_cols].apply( lambda x: x.replace("%", ""))
+    s = df.loc[df["season"] == season, :]
+    s = season.loc[:, learning_cols].apply( lambda x: x.replace("%", ""))
+    print(season[learning_cols] )
     teams = list(set(df.loc[:, "teamidB"].tolist() + df.loc[:, "teamidR"].tolist()))
     #regular = season.loc[condition_nw, :]
     for team in teams:
         teamb = season.loc[season["teamidB"] == team, learning_cols]
         teamr = season.loc[season["teamidB"] == team, learning_cols]
-        print(teamb)
+
 
 
 
