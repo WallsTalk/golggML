@@ -25,23 +25,24 @@ df = df.drop(columns=df.filter(regex="(event|time)(id){0,1}[0-9]+").columns)
 #      ["LOUD", "GAM Esports"],
 #      ["PSG Talon", "Movistar R7"],
 # ]
-matches = [
-    ["Gen.G eSports", "GAM Esports"],
-    ["T1", "Team Liquid"],
-     ["KT Rolster", "Bilibili Gaming"],
-     ["Dplus KIA", "G2 Esports"],
-     ["JD Gaming", "Team BDS"],
-     ["LNG Esports", "Fnatic"],
-     ["Weibo Gaming", "NRG"],
-    ["Cloud9", "MAD Lions"]
-]
-winners = ["Gen.G eSports","KT Rolster","G2 Esports","LNG Esports","JD Gaming","Cloud9","T1","Weibo Gaming"]
-winners = [	"Dplus KIA","Bilibili Gaming","GAM Esports","Fnatic","Team BDS","MAD Lions","Team Liquid","NRG"]
-winners = ["KT Rolster", "T1", "LNG Esports", "Gen.G eSports"]
-winners = ["Cloud9", "JD Gaming", "Team Liquid", "Dplus KIA", "Weibo Gaming", "Fnatic", "Bilibili Gaming", "G2 Esports"]
-winners = ["Team BDS", "NRG", "MAD Lions", "GAM Esports"]
-winners = ["T1", "LNG Esports", "G2 Esports", "JD Gaming", "Fnatic", "Dplus KIA", "GAM Esports", "MAD Lions"]
-matches = [[winners[winner], winners[wwiner]] for winner in range(len(winners)) for wwiner in range(winner+1,len(winners))]
+# matches = [
+#     ["Gen.G eSports", "GAM Esports"],
+#     ["T1", "Team Liquid"],
+#      ["KT Rolster", "Bilibili Gaming"],
+#      ["Dplus KIA", "G2 Esports"],
+#      ["JD Gaming", "Team BDS"],
+#      ["LNG Esports", "Fnatic"],
+#      ["Weibo Gaming", "NRG"],
+#     ["Cloud9", "MAD Lions"]
+# ]
+# winners = ["Gen.G eSports","KT Rolster","G2 Esports","LNG Esports","JD Gaming","Cloud9","T1","Weibo Gaming"]
+# winners = [	"Dplus KIA","Bilibili Gaming","GAM Esports","Fnatic","Team BDS","MAD Lions","Team Liquid","NRG"]
+# winners = ["KT Rolster", "T1", "LNG Esports", "Gen.G eSports"]
+# winners = ["Cloud9", "JD Gaming", "Team Liquid", "Dplus KIA", "Weibo Gaming", "Fnatic", "Bilibili Gaming", "G2 Esports"]
+# winners = ["Team BDS", "NRG", "MAD Lions", "GAM Esports"]
+#winners = ["T1", "LNG Esports", "G2 Esports", "JD Gaming", "Fnatic", "Dplus KIA", "GAM Esports", "MAD Lions"]
+winners = ["Gen.G eSports", "T1", "KT Rolster", "Dplus KIA", "JD Gaming", "Fnatic", "Weibo Gaming", "Cloud9"]
+matches = [[winners[winner], winners[wwiner]] if i ==0  else [winners[wwiner], winners[winner]] for winner in range(len(winners)) for wwiner in range(winner+1,len(winners)) for i in range(2)]
 
 seasons = [8, 9, 10, 11, 12]
 
