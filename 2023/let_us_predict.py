@@ -28,20 +28,26 @@ df[lcols] = df.loc[:, lcols].applymap(lambda x: float(x.replace("%", "")))
 
 for season in seasons:
     s = df.loc[~cworlds & (df["season"] == season), :]
-    teams = list(set(s.loc[:, "teamidB"].tolist() + s.loc[:, "teamidR"].tolist()))
     w = df.loc[cworlds & (df["season"] == season), :]
-    wl = df.loc[cworlds & (df["season"] == season), :]
+    teams = list(set(w.loc[:, "teamB"].tolist() + w.loc[:, "teamR"].tolist()))
     for team in teams:
         for col in blcols:
-            w.loc[w["teamidB"] == team, col] = w.loc[w["teamidB"] == team, col].mean()
+            w.loc[w["teamB"] == team, col + "min"] = s.loc[s["teamB"] == team, col].min()
+            w.loc[w["teamB"] == team, col + "max"] = s.loc[s["teamB"] == team, col].max()
+            w.loc[w["teamB"] == team, col] = s.loc[s["teamB"] == team, col].mean()
         for col in rlcols:
-            w.loc[w["teamidR"] == team, col] = w.loc[w["teamidR"] == team, col].mean()
+            w.loc[w["teamR"] == team, col+"min"] = s.loc[s["teamR"] == team, col].min()
+            w.loc[w["teamR"] == team, col + "max"] = s.loc[s["teamR"] == team, col].max()
+            w.loc[w["teamR"] == team, col] = s.loc[s["teamR"] == team, col].mean()
+
         # w.loc[w["teamidB"] == team, blcols] = w.loc[w["teamidB"] == team, blcols].assign(
         #     **s.loc[s["teamidB"] == team, blcols].mean())
         # w.loc[w["teamidR"] == team, rlcols] = w.loc[w["teamidR"] == team, rlcols].assign(
         #     **s.loc[s["teamidR"] == team, rlcols].mean())
 
 # w[list(blcols)[:1] + list(rlcols)[:1] + ["teamB", "teamR"]]
+lcols = list(blcols) + list(rlcols)
+lcols = list(lcols) + list(blcols+"min") +list(rlcols+"min") + list(blcols+"max") +list(rlcols+"max")
 
 trainw = w.loc[:, list(lcols) + list(pid)]
 result = w.loc[:, "result"]
@@ -71,7 +77,11 @@ predictdf = pd.DataFrame(columns=trainw.columns)
 for match in range(len(matches)):
     predictdf.loc[match, :] = [s.loc[s["teamB"] == matches[match][0], col].mean() for col in blcols] + \
                               [s.loc[s["teamR"] == matches[match][1], col].mean() for col in rlcols] + \
-                                s.loc[(s["teamB"] == matches[match][0]), df.filter(regex="pidB").columns].iloc[1].to_list() + \
+                              [s.loc[s["teamB"] == matches[match][1], col].min() for col in rlcols] + \
+                              [s.loc[s["teamR"] == matches[match][1], col].min() for col in rlcols] + \
+                              [s.loc[s["teamB"] == matches[match][1], col].max() for col in rlcols] + \
+                              [s.loc[s["teamR"] == matches[match][1], col].max() for col in rlcols] + \
+                              s.loc[(s["teamB"] == matches[match][0]), df.filter(regex="pidB").columns].iloc[1].to_list() + \
                                 s.loc[(s["teamR"] == matches[match][0]), df.filter(regex="pidR").columns].iloc[1].to_list()
 # print(predictdf[list(blcols)[:1] + list(rlcols)[:1]])
 predictions = model.predict(predictdf)
