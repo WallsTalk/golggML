@@ -15,29 +15,30 @@ seasons = [8, 9, 10, 11, 12]
 
 #learning_cols = df.filter(regex="[BR]{1}[TJMAS]{1}$").columns
 pid = df.filter(regex="pid[BR]{1}").columns
-blcols = df.filter(regex="(dmg-proc|dpm|gpm)B").columns
-rlcols = df.filter(regex="(dmg-proc|dpm|gpm)R").columns
+blcols = df.filter(regex="(dmg-proc|gold-proc)B").columns
+rlcols = df.filter(regex="(dmg-proc|gold-proc)R").columns
+
 lcols = list(blcols) + list(rlcols)
 
 
 cworlds = (df["turney"].str.contains("World"))
-#df[lcols] = df.loc[:, lcols].applymap(lambda x: float(x.replace("%", "")))
+df[lcols] = df.loc[:, lcols].applymap(lambda x: float(x.replace("%", "")) if type(x) == str else x)
 
 lcols = list(blcols) + list(rlcols)
 lcols = list(lcols) + list(blcols+"min") +list(rlcols+"min") + list(blcols+"max") +list(rlcols+"max")
 ww = pd.DataFrame(columns=df.columns)
 for season in seasons:
-    s = df.loc[~cworlds & (df["season"] == season), :]
-    w = df.loc[cworlds & (df["season"] == season), :]
+    s = df.loc[~cworlds & (df["season"] == season), :].copy()
+    w = df.loc[cworlds & (df["season"] == season), :].copy()
     teams = list(set(w.loc[:, "teamB"].tolist() + w.loc[:, "teamR"].tolist()))
     for team in teams:
         for col in blcols:
-            w.loc[w["teamB"] == team, col + "min"] = s.loc[s["teamB"] == team, col].min()
-            w.loc[w["teamB"] == team, col + "max"] = s.loc[s["teamB"] == team, col].max()
+            w.loc[w["teamB"] == team, col + "min"] = np.array(sorted(s.loc[s["teamB"] == team, col].to_list())[:5]).mean()
+            w.loc[w["teamB"] == team, col + "max"] = np.array(sorted(s.loc[s["teamB"] == team, col].to_list())[-5:]).mean()
             w.loc[w["teamB"] == team, col] = s.loc[s["teamB"] == team, col].mean()
         for col in rlcols:
-            w.loc[w["teamR"] == team, col+"min"] = s.loc[s["teamR"] == team, col].min()
-            w.loc[w["teamR"] == team, col + "max"] = s.loc[s["teamR"] == team, col].max()
+            w.loc[w["teamR"] == team, col+"min"] = np.array(sorted(s.loc[s["teamR"] == team, col].to_list())[:5]).mean()
+            w.loc[w["teamR"] == team, col + "max"] = np.array(sorted(s.loc[s["teamR"] == team, col].to_list())[-5:]).mean()
             w.loc[w["teamR"] == team, col] = s.loc[s["teamR"] == team, col].mean()
     ww = pd.concat([ww, w])
 
@@ -84,11 +85,18 @@ predictions = [matches[i] + [predictions[i]]  for i in range(len(matches))]
 validation["p"] = validation.loc[:, "result"]
 for prediction in predictions:
     condition = (validation["teamB"] == prediction[0]) & (validation["teamR"] == prediction[1])
-    validation.loc[condition, "p"] = prediction[2]#validation.loc[condition, ["error"]]#.applymap(lambda x: x-prediction[2])
+    validation.loc[condition, "p"] = prediction[2]
 
 validation.loc[:, "error"] = validation["result"] - validation["p"]
 validation.loc[:, "error"] = validation["error"].apply(lambda x: abs(x))
 print(validation[["teamB", "teamR", "result", "p", "error"]])
-
-
-
+del ww
+del w
+del trainw
+del predictdf
+del cworlds
+del result
+del s
+del model
+del rlcols
+del blcols
