@@ -11,21 +11,21 @@ validation = pd.read_csv('2023/temp.csv')
 #seasons = list(set(df["season"].tolist()))
 df = df.drop(columns=df.filter(regex="(event|time)(id){0,1}[0-9]+").columns)
 
-seasons = [12]
-matches = [
-    ["KT Rolster", "Bilibili Gaming"]
-]
+seasons = [8, 9, 10, 11, 12]
 
 #learning_cols = df.filter(regex="[BR]{1}[TJMAS]{1}$").columns
 pid = df.filter(regex="pid[BR]{1}").columns
-blcols = df.filter(regex="(dmg-proc)B").columns
-rlcols = df.filter(regex="(dmg-proc)R").columns
+blcols = df.filter(regex="(dmg-proc|dpm|gpm)B").columns
+rlcols = df.filter(regex="(dmg-proc|dpm|gpm)R").columns
 lcols = list(blcols) + list(rlcols)
 
 
 cworlds = (df["turney"].str.contains("World"))
-df[lcols] = df.loc[:, lcols].applymap(lambda x: float(x.replace("%", "")))
+#df[lcols] = df.loc[:, lcols].applymap(lambda x: float(x.replace("%", "")))
 
+lcols = list(blcols) + list(rlcols)
+lcols = list(lcols) + list(blcols+"min") +list(rlcols+"min") + list(blcols+"max") +list(rlcols+"max")
+ww = pd.DataFrame(columns=df.columns)
 for season in seasons:
     s = df.loc[~cworlds & (df["season"] == season), :]
     w = df.loc[cworlds & (df["season"] == season), :]
@@ -39,18 +39,11 @@ for season in seasons:
             w.loc[w["teamR"] == team, col+"min"] = s.loc[s["teamR"] == team, col].min()
             w.loc[w["teamR"] == team, col + "max"] = s.loc[s["teamR"] == team, col].max()
             w.loc[w["teamR"] == team, col] = s.loc[s["teamR"] == team, col].mean()
+    ww = pd.concat([ww, w])
 
-        # w.loc[w["teamidB"] == team, blcols] = w.loc[w["teamidB"] == team, blcols].assign(
-        #     **s.loc[s["teamidB"] == team, blcols].mean())
-        # w.loc[w["teamidR"] == team, rlcols] = w.loc[w["teamidR"] == team, rlcols].assign(
-        #     **s.loc[s["teamidR"] == team, rlcols].mean())
 
-# w[list(blcols)[:1] + list(rlcols)[:1] + ["teamB", "teamR"]]
-lcols = list(blcols) + list(rlcols)
-lcols = list(lcols) + list(blcols+"min") +list(rlcols+"min") + list(blcols+"max") +list(rlcols+"max")
-
-trainw = w.loc[:, list(lcols) + list(pid)]
-result = w.loc[:, "result"]
+trainw = ww.loc[:, list(lcols) + list(pid)]
+result = ww.loc[:, "result"]
 model = RandomForestRegressor()
 model.fit(trainw, result)
 
@@ -97,12 +90,5 @@ validation.loc[:, "error"] = validation["result"] - validation["p"]
 validation.loc[:, "error"] = validation["error"].apply(lambda x: abs(x))
 print(validation[["teamB", "teamR", "result", "p", "error"]])
 
-    # forest_model = RandomForestRegressor()
-    # forest_model.fit(seasondf)
-    # melb_preds = forest_model.predict(val_X)
-    # print(mean_absolute_error(val_y, melb_preds))
 
-    #lisset([team for teams in ["teamB", "teamR"] for team in df[teams].tolist()])
-    x=1
-    #df.columns[df.columns.str.contains(s)]
 
