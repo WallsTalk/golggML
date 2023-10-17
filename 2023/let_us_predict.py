@@ -11,6 +11,35 @@ validation = pd.read_csv('2023/temp.csv')
 #seasons = list(set(df["season"].tolist()))
 df = df.drop(columns=df.filter(regex="(event|time)(id){0,1}[0-9]+").columns)
 
+# matches = [
+#     ["PSG Talon", "Team BDS"],
+#     ["GAM Esports", "Team Whales"],
+#      ["CTBC Flying Oyster", "Team BDS"],
+#      ["LOUD", "GAM Esports"],
+#      ["Detonation FocusMe", "Team BDS"],
+#      ["Movistar R7", "GAM Esports"],
+#      ["CTBC Flying Oyster", "Team Whales"],
+#      ["PSG Talon", "LOUD"],
+#      ["Team BDS", "Team Whales"],
+#      ["Detonation FocusMe", "CTBC Flying Oyster"],
+#      ["LOUD", "GAM Esports"],
+#      ["PSG Talon", "Movistar R7"],
+# ]
+matches = [
+    ["Gen.G eSports", "GAM Esports"],
+    ["T1", "Team Liquid"],
+     ["KT Rolster", "Bilibili Gaming"],
+     ["Dplus KIA", "G2 Esports"],
+     ["JD Gaming", "Team BDS"],
+     ["LNG Esports", "Fnatic"],
+     ["Weibo Gaming", "NRG"],
+    ["Cloud9", "MAD Lions"]
+]
+# winners = ["Gen.G eSports","KT Rolster","G2 Esports","LNG Esports","JD Gaming","NRG","Cloud9","T1"]
+# winners = [	"Dplus KIA","Bilibili Gaming","GAM Esports","Fnatic","Team BDS","Weibo Gaming","MAD Lions","Team Liquid",]
+# winners = ["KT Rolster", "LNG Esports", "NRG", "G2 Esports"]
+# matches = [[winners[winner], winners[wwiner]] for winner in range(len(winners)) for wwiner in range(winner+1,len(winners))]
+
 seasons = [8, 9, 10, 11, 12]
 
 #learning_cols = df.filter(regex="[BR]{1}[TJMAS]{1}$").columns
@@ -50,20 +79,7 @@ model.fit(trainw, result)
 
 
 ## SEASON 13 maches
-matches = [
-    ["PSG Talon", "Team BDS"],
-    ["GAM Esports", "Team Whales"],
-     ["CTBC Flying Oyster", "Team BDS"],
-     ["LOUD", "GAM Esports"],
-     ["Detonation FocusMe", "Team BDS"],
-     ["Movistar R7", "GAM Esports"],
-     ["CTBC Flying Oyster", "Team Whales"],
-     ["PSG Talon", "LOUD"],
-     ["Team BDS", "Team Whales"],
-     ["Detonation FocusMe", "CTBC Flying Oyster"],
-     ["LOUD", "GAM Esports"],
-     ["PSG Talon", "Movistar R7"],
-]
+
 
 matches = matches + [[match[1], match[0]] for match in matches]
 s = df.loc[~cworlds & (df["season"] == 13), :]
@@ -73,7 +89,7 @@ for match in range(len(matches)):
                               [s.loc[s["teamR"] == matches[match][1], col].mean() for col in rlcols] + \
                               [s.loc[s["teamB"] == matches[match][1], col].min() for col in rlcols] + \
                               [s.loc[s["teamR"] == matches[match][1], col].min() for col in rlcols] + \
-                              [s.loc[s["teamB"] == matches[match][1], col].max() for col in rlcols] + \
+                              [s.loc[s["teamB"] == matches[match][1], col].max() for col in blcols] + \
                               [s.loc[s["teamR"] == matches[match][1], col].max() for col in rlcols] + \
                               s.loc[(s["teamB"] == matches[match][0]), df.filter(regex="pidB").columns].iloc[1].to_list() + \
                                 s.loc[(s["teamR"] == matches[match][0]), df.filter(regex="pidR").columns].iloc[1].to_list()
@@ -81,15 +97,16 @@ for match in range(len(matches)):
 predictions = model.predict(predictdf)
 
 predictions = [matches[i] + [predictions[i]]  for i in range(len(matches))]
-
-validation["p"] = validation.loc[:, "result"]
 for prediction in predictions:
-    condition = (validation["teamB"] == prediction[0]) & (validation["teamR"] == prediction[1])
-    validation.loc[condition, "p"] = prediction[2]
-
-validation.loc[:, "error"] = validation["result"] - validation["p"]
-validation.loc[:, "error"] = validation["error"].apply(lambda x: abs(x))
-print(validation[["teamB", "teamR", "result", "p", "error"]])
+    print(prediction)
+#validation["p"] = validation.loc[:, "result"]
+# for prediction in predictions:
+#     # condition = (validation["teamB"] == prediction[0]) & (validation["teamR"] == prediction[1])
+#     # validation.loc[condition, "p"] = prediction[2]
+#     print()
+# validation.loc[:, "error"] = validation["result"] - validation["p"]
+# validation.loc[:, "error"] = validation["error"].apply(lambda x: abs(x))
+# print(validation[["teamB", "teamR", "result", "p", "error"]])
 del ww
 del w
 del trainw
