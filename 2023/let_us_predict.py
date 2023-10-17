@@ -17,20 +17,11 @@ matches = [
 ]
 
 #learning_cols = df.filter(regex="[BR]{1}[TJMAS]{1}$").columns
-pcols = df.filter(regex="(dmg-proc)B").columns
+pid = df.filter(regex="pid[BR]{1}").columns
 blcols = df.filter(regex="(dmg-proc)B").columns
 rlcols = df.filter(regex="(dmg-proc)R").columns
 lcols = list(blcols) + list(rlcols)
-# for season in seasons:
-#     for match in matches:
-#         condition = (~df["turney"].str.contains("World")) & (df["teamB"] == match[0])
-#         season = df.loc[df["season"]==season, :]
-#         worlds = season.loc[condition, :]
-#         regular = season.loc[condition, :]
-#         #regular.
-#         print(regular)
 
-# make a set for each season of each team
 
 cworlds = (df["turney"].str.contains("World"))
 df[lcols] = df.loc[:, lcols].applymap(lambda x: float(x.replace("%", "")))
@@ -39,22 +30,26 @@ for season in seasons:
     s = df.loc[~cworlds & (df["season"] == season), :]
     teams = list(set(s.loc[:, "teamidB"].tolist() + s.loc[:, "teamidR"].tolist()))
     w = df.loc[cworlds & (df["season"] == season), :]
+    wl = df.loc[cworlds & (df["season"] == season), :]
     for team in teams:
-        w.loc[w["teamidB"] == team, blcols] = w.loc[w["teamidB"] == team, blcols].assign(**s.loc[s["teamidB"] == team, blcols].mean())
-        w.loc[w["teamidR"] == team, rlcols] = w.loc[w["teamidR"] == team, rlcols].assign(**s.loc[s["teamidR"] == team, rlcols].mean())
+        for col in blcols:
+            w.loc[w["teamidB"] == team, col] = w.loc[w["teamidB"] == team, col].mean()
+        for col in rlcols:
+            w.loc[w["teamidR"] == team, col] = w.loc[w["teamidR"] == team, col].mean()
+        # w.loc[w["teamidB"] == team, blcols] = w.loc[w["teamidB"] == team, blcols].assign(
+        #     **s.loc[s["teamidB"] == team, blcols].mean())
+        # w.loc[w["teamidR"] == team, rlcols] = w.loc[w["teamidR"] == team, rlcols].assign(
+        #     **s.loc[s["teamidR"] == team, rlcols].mean())
 
+# w[list(blcols)[:1] + list(rlcols)[:1] + ["teamB", "teamR"]]
 
-trainw = w.loc[:, lcols]
+trainw = w.loc[:, list(lcols) + list(pid)]
 result = w.loc[:, "result"]
 model = RandomForestRegressor()
 model.fit(trainw, result)
 
 
 ## SEASON 13 maches
-
-s = df.loc[~cworlds & (df["season"] == 13), :]
-teams = list(set(s.loc[:, "teamB"].tolist() + s.loc[:, "teamR"].tolist()))
-print(teams)
 matches = [
     ["PSG Talon", "Team BDS"],
     ["GAM Esports", "Team Whales"],
@@ -69,11 +64,16 @@ matches = [
      ["LOUD", "GAM Esports"],
      ["PSG Talon", "Movistar R7"],
 ]
+
 matches = matches + [[match[1], match[0]] for match in matches]
+s = df.loc[~cworlds & (df["season"] == 13), :]
 predictdf = pd.DataFrame(columns=trainw.columns)
 for match in range(len(matches)):
-    predictdf = pd.concat([predictdf, pd.concat([s.loc[s["teamB"] == matches[match][0], blcols].mean(), s.loc[s["teamR"] == matches[match][1], rlcols].mean()]).to_frame().T], ignore_index=True)
-
+    predictdf.loc[match, :] = [s.loc[s["teamB"] == matches[match][0], col].mean() for col in blcols] + \
+                              [s.loc[s["teamR"] == matches[match][1], col].mean() for col in rlcols] + \
+                                s.loc[(s["teamB"] == matches[match][0]), df.filter(regex="pidB").columns].iloc[1].to_list() + \
+                                s.loc[(s["teamR"] == matches[match][0]), df.filter(regex="pidR").columns].iloc[1].to_list()
+# print(predictdf[list(blcols)[:1] + list(rlcols)[:1]])
 predictions = model.predict(predictdf)
 
 predictions = [matches[i] + [predictions[i]]  for i in range(len(matches))]
