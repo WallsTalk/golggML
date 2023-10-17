@@ -6,8 +6,8 @@ import numpy as np
 
 
 
-df = pd.read_csv('2023/decent_data2.csv')
-validation = pd.read_csv('2023/temp.csv')
+df = pd.read_csv('decent_data2.csv')
+validation = pd.read_csv('temp.csv')
 #seasons = list(set(df["season"].tolist()))
 df = df.drop(columns=df.filter(regex="(event|time)(id){0,1}[0-9]+").columns)
 
