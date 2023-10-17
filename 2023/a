@@ -273,3 +273,88 @@ Team Liquid 5
 ['Bilibili Gaming', 'Fnatic', 0.5041428571428571]
 ['G2 Esports', 'Fnatic', 0.49614285714285716]
 ['G2 Esports', 'Bilibili Gaming', 0.5845952380952381]
+
+NRG 1.5
+MAD Lions 1
+Team BDS 3
+GAM Esports 1
+
+['Team BDS', 'NRG', 0.45666666666666667]
+['Team BDS', 'MAD Lions', 0.5001666666666666]
+['Team BDS', 'GAM Esports', 0.4844761904761905]
+['NRG', 'MAD Lions', 0.5705]
+['NRG', 'GAM Esports', 0.5129761904761905]
+['MAD Lions', 'GAM Esports', 0.5818095238095238]
+['NRG', 'Team BDS', 0.6785000000000001]
+['MAD Lions', 'Team BDS', 0.6291666666666668]
+['GAM Esports', 'Team BDS', 0.6866666666666668]
+['MAD Lions', 'NRG', 0.5479999999999999]
+['GAM Esports', 'NRG', 0.5141666666666667]
+['GAM Esports', 'MAD Lions', 0.48400000000000004]
+
+
+T1 3
+LNG Esports 3
+G2 Esports 5-6
+JD Gaming 6
+Dplus KIA 6
+Fnatic 7
+GAM Esports 9
+MAD Lions 9
+['T1', 'LNG Esports', 0.4425]
+['T1', 'G2 Esports', 0.5441666666666665]
+['T1', 'JD Gaming', 0.5648333333333332]
+['T1', 'Fnatic', 0.4641666666666667]
+['T1', 'Dplus KIA', 0.5931666666666666]
+['T1', 'GAM Esports', 0.554404761904762]
+['T1', 'MAD Lions', 0.5645833333333333]
+['LNG Esports', 'G2 Esports', 0.6051666666666666]
+['LNG Esports', 'JD Gaming', 0.6525]
+['LNG Esports', 'Fnatic', 0.4868333333333333]
+['LNG Esports', 'Dplus KIA', 0.5676666666666667]
+['LNG Esports', 'GAM Esports', 0.5408333333333334]
+['LNG Esports', 'MAD Lions', 0.5077857142857143]
+['G2 Esports', 'JD Gaming', 0.5448333333333332]
+['G2 Esports', 'Fnatic', 0.4025000000000001]
+['G2 Esports', 'Dplus KIA', 0.49683333333333335]
+['G2 Esports', 'GAM Esports', 0.5173333333333333]
+['G2 Esports', 'MAD Lions', 0.48458333333333337]
+['JD Gaming', 'Fnatic', 0.5093333333333334]
+['JD Gaming', 'Dplus KIA', 0.5994999999999999]
+['JD Gaming', 'GAM Esports', 0.499]
+['JD Gaming', 'MAD Lions', 0.6064166666666666]
+['Fnatic', 'Dplus KIA', 0.48150000000000004]
+['Fnatic', 'GAM Esports', 0.49090476190476195]
+['Fnatic', 'MAD Lions', 0.4638333333333334]
+['Dplus KIA', 'GAM Esports', 0.5214880952380953]
+['Dplus KIA', 'MAD Lions', 0.6085357142857144]
+['GAM Esports', 'MAD Lions', 0.5705833333333333]
+['LNG Esports', 'T1', 0.49616666666666676]
+['G2 Esports', 'T1', 0.37383333333333335]
+['JD Gaming', 'T1', 0.4746666666666667]
+['Fnatic', 'T1', 0.4963333333333334]
+['Dplus KIA', 'T1', 0.5773571428571429]
+['GAM Esports', 'T1', 0.39319047619047615]
+['MAD Lions', 'T1', 0.4723333333333333]
+['G2 Esports', 'LNG Esports', 0.41583333333333333]
+['JD Gaming', 'LNG Esports', 0.37449999999999994]
+['Fnatic', 'LNG Esports', 0.34950000000000003]
+['Dplus KIA', 'LNG Esports', 0.4825]
+['GAM Esports', 'LNG Esports', 0.3966666666666667]
+['MAD Lions', 'LNG Esports', 0.4025]
+['JD Gaming', 'G2 Esports', 0.5126666666666666]
+['Fnatic', 'G2 Esports', 0.49416666666666664]
+['Dplus KIA', 'G2 Esports', 0.5466666666666666]
+['GAM Esports', 'G2 Esports', 0.4776666666666666]
+['MAD Lions', 'G2 Esports', 0.5498333333333333]
+['Fnatic', 'JD Gaming', 0.5391666666666667]
+['Dplus KIA', 'JD Gaming', 0.6181666666666666]
+['GAM Esports', 'JD Gaming', 0.5141666666666665]
+['MAD Lions', 'JD Gaming', 0.6441666666666666]
+['Dplus KIA', 'Fnatic', 0.5830000000000001]
+['GAM Esports', 'Fnatic', 0.43250000000000005]
+['MAD Lions', 'Fnatic', 0.466]
+['GAM Esports', 'Dplus KIA', 0.5265]
+['MAD Lions', 'Dplus KIA', 0.6025]
+['MAD Lions', 'GAM Esports', 0.499]
+

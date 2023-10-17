@@ -70,15 +70,18 @@ Team BDS 10
 
 	looser looser
 	["Team BDS", "NRG", "MAD Lions", "GAM Esports"]
-
+    NRG 1.5
+    MAD Lions 1
+    Team BDS 3
+    GAM Esports 1
 
         win win win:
         [ "Gen.G eSports", "KT Rolster" ]
 
-        win win loose / win loose win
-        ["T1", "LNG Esports", "G2 Esports", "JD Gaming", "Fnatic", "Dplus KIA"
+        win win loose / win loose win / lose win win
+        ["T1", "LNG Esports", "G2 Esports", "JD Gaming", "Fnatic", "Dplus KIA", "GAM Esports", "MAD Lions"]
 
         loose loose loose
-        [
+        ["NRG", "Team BDS"]
 
 

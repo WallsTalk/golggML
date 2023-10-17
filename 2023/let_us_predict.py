@@ -40,6 +40,7 @@ winners = [	"Dplus KIA","Bilibili Gaming","GAM Esports","Fnatic","Team BDS","MAD
 winners = ["KT Rolster", "T1", "LNG Esports", "Gen.G eSports"]
 winners = ["Cloud9", "JD Gaming", "Team Liquid", "Dplus KIA", "Weibo Gaming", "Fnatic", "Bilibili Gaming", "G2 Esports"]
 winners = ["Team BDS", "NRG", "MAD Lions", "GAM Esports"]
+winners = ["T1", "LNG Esports", "G2 Esports", "JD Gaming", "Fnatic", "Dplus KIA", "GAM Esports", "MAD Lions"]
 matches = [[winners[winner], winners[wwiner]] for winner in range(len(winners)) for wwiner in range(winner+1,len(winners))]
 
 seasons = [8, 9, 10, 11, 12]
