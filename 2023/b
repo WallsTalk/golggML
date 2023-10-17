@@ -1,0 +1,84 @@
+
+    ["Gen.G eSports", "GAM Esports"],
+    ["T1", "Team Liquid"],
+     ["KT Rolster", "Bilibili Gaming"],
+     ["Dplus KIA", "G2 Esports"],
+     ["JD Gaming", "Team BDS"],
+     ["LNG Esports", "Fnatic"],
+     ["Weibo Gaming", "NRG"],
+    ["Cloud9", "MAD Lions"]
+
+
+	winer
+	["Gen.G eSports",
+	["KT Rolster",
+	["G2 Esports",
+	["LNG Esports",
+	["JD Gaming",
+	["Weibo Gaming",
+	["Cloud9",
+	["T1",
+
+Gen.G eSports 2
+KT Rolster 2
+T1 5
+LNG Esports 6
+Cloud9 6
+G2 Esports 7
+JD Gaming 8
+Weibo Gaming 9
+
+	loser
+	["NRG",
+	["Dplus KIA",
+	["Bilibili Gaming",
+	["GAM Esports",
+	["Fnatic",
+	["Team BDS",
+	["MAD Lions",
+	["Team Liquid",
+
+Dplus KIA 2
+Fnatic 3
+Bilibili Gaming 4
+Team Liquid 4
+GAM Esports 7
+MAD Lions 7
+NRG 8
+Team BDS 10
+
+
+	winner winner
+	["KT Rolster", "T1", "LNG Esports", "Gen.G eSports"]
+
+	Gen.G eSports 0
+    KT Rolster 1
+    T1 2
+    LNG Esports 2
+
+    winner looser/ looser winner
+	["Cloud9", "JD Gaming", "Team Liquid", "Dplus KIA", "Weibo Gaming", "Fnatic", "Bilibili Gaming", "G2 Esports"]
+
+	JD Gaming 1-2
+    G2 Esports 2
+    Fnatic 3
+    Dplus KIA 4
+    Cloud9 4
+    Weibo Gaming 4
+    Bilibili Gaming 4
+    Team Liquid 5
+
+	looser looser
+	["Team BDS", "NRG", "MAD Lions", "GAM Esports"]
+
+
+        win win win:
+        [ "Gen.G eSports", "KT Rolster" ]
+
+        win win loose / win loose win
+        ["T1", "LNG Esports", "G2 Esports", "JD Gaming", "Fnatic", "Dplus KIA"
+
+        loose loose loose
+        [
+
+
