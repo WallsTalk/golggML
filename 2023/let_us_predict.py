@@ -6,8 +6,8 @@ import numpy as np
 
 
 
-df = pd.read_csv('decent_data2.csv')
-validation = pd.read_csv('temp.csv')
+df = pd.read_csv('2023/decent_data2.csv')
+validation = pd.read_csv('2023/temp.csv')
 #seasons = list(set(df["season"].tolist()))
 df = df.drop(columns=df.filter(regex="(event|time)(id){0,1}[0-9]+").columns)
 
@@ -25,28 +25,29 @@ df = df.drop(columns=df.filter(regex="(event|time)(id){0,1}[0-9]+").columns)
 #      ["LOUD", "GAM Esports"],
 #      ["PSG Talon", "Movistar R7"],
 # ]
-# matches = [
-#     ["Gen.G eSports", "GAM Esports"],
-#     ["T1", "Team Liquid"],
-#      ["KT Rolster", "Bilibili Gaming"],
-#      ["Dplus KIA", "G2 Esports"],
-#      ["JD Gaming", "Team BDS"],
-#      ["LNG Esports", "Fnatic"],
-#      ["Weibo Gaming", "NRG"],
-#     ["Cloud9", "MAD Lions"]
-# ]
+matches = [
+    ["Gen.G eSports", "GAM Esports"],
+    ["T1", "Team Liquid"],
+     ["KT Rolster", "Bilibili Gaming"],
+     ["Dplus KIA", "G2 Esports"],
+     ["JD Gaming", "Team BDS"],
+     ["LNG Esports", "Fnatic"],
+     ["Weibo Gaming", "NRG"],
+    ["Cloud9", "MAD Lions"]
+]
 # winners = ["Gen.G eSports","KT Rolster","G2 Esports","LNG Esports","JD Gaming","Cloud9","T1","Weibo Gaming"]
 # winners = [	"Dplus KIA","Bilibili Gaming","GAM Esports","Fnatic","Team BDS","MAD Lions","Team Liquid","NRG"]
 # winners = ["KT Rolster", "T1", "LNG Esports", "Gen.G eSports"]
 # winners = ["Cloud9", "JD Gaming", "Team Liquid", "Dplus KIA", "Weibo Gaming", "Fnatic", "Bilibili Gaming", "G2 Esports"]
 # winners = ["Team BDS", "NRG", "MAD Lions", "GAM Esports"]
 #winners = ["T1", "LNG Esports", "G2 Esports", "JD Gaming", "Fnatic", "Dplus KIA", "GAM Esports", "MAD Lions"]
-winners = ["Gen.G eSports", "T1", "KT Rolster", "Dplus KIA", "JD Gaming", "Fnatic", "Weibo Gaming", "Cloud9"]
-matches = [[winners[winner], winners[wwiner]] if i ==0  else [winners[wwiner], winners[winner]] for winner in range(len(winners)) for wwiner in range(winner+1,len(winners)) for i in range(2)]
+# winners = ["GAM Esports", "Team Liquid", "Bilibili Gaming", "G2 Esports", "Team BDS", "LNG Esports", "MAD Lions", "NRG"]
+# matches = [[winners[winner], winners[wwiner]] if i ==0  else [winners[wwiner], winners[winner]] for winner in range(len(winners)) for wwiner in range(winner+1,len(winners)) for i in range(2)]
 
 seasons = [8, 9, 10, 11, 12]
 
 #learning_cols = df.filter(regex="[BR]{1}[TJMAS]{1}$").columns
+
 pid = df.filter(regex="pid[BR]{1}").columns
 blcols = df.filter(regex="(dmg-proc|gold-proc)B").columns
 rlcols = df.filter(regex="(dmg-proc|gold-proc)R").columns
@@ -78,31 +79,61 @@ for season in seasons:
 
 trainw = ww.loc[:, list(lcols) + list(pid)]
 result = ww.loc[:, "result"]
-model = RandomForestRegressor()
-model.fit(trainw, result)
-
-
-## SEASON 13 maches
-
-
 matches = matches + [[match[1], match[0]] for match in matches]
-s = df.loc[~cworlds & (df["season"] == 13), :]
-predictdf = pd.DataFrame(columns=trainw.columns)
-for match in range(len(matches)):
-    predictdf.loc[match, :] = [s.loc[s["teamB"] == matches[match][0], col].mean() for col in blcols] + \
-                              [s.loc[s["teamR"] == matches[match][1], col].mean() for col in rlcols] + \
-                              [s.loc[s["teamB"] == matches[match][1], col].min() for col in rlcols] + \
-                              [s.loc[s["teamR"] == matches[match][1], col].min() for col in rlcols] + \
-                              [s.loc[s["teamB"] == matches[match][1], col].max() for col in blcols] + \
-                              [s.loc[s["teamR"] == matches[match][1], col].max() for col in rlcols] + \
-                              s.loc[(s["teamB"] == matches[match][0]), df.filter(regex="pidB").columns].iloc[1].to_list() + \
-                                s.loc[(s["teamR"] == matches[match][0]), df.filter(regex="pidR").columns].iloc[1].to_list()
-# print(predictdf[list(blcols)[:1] + list(rlcols)[:1]])
-predictions = model.predict(predictdf)
 
-predictions = [matches[i] + [predictions[i]]  for i in range(len(matches))]
-for prediction in predictions:
-    print(prediction)
+
+
+
+
+    ## SEASON 13 maches
+_ranger = 20
+for i in range(_ranger):
+    model = RandomForestRegressor()
+    model.fit(trainw, result)
+
+    s = df.loc[~cworlds & (df["season"] == 13), :]
+    predictdf = pd.DataFrame(columns=trainw.columns)
+    for match in range(len(matches)):
+        predictdf.loc[match, :] = [s.loc[s["teamB"] == matches[match][0], col].mean() for col in blcols] + \
+                                  [s.loc[s["teamR"] == matches[match][1], col].mean() for col in rlcols] + \
+                                  [s.loc[s["teamB"] == matches[match][1], col].min() for col in rlcols] + \
+                                  [s.loc[s["teamR"] == matches[match][1], col].min() for col in rlcols] + \
+                                  [s.loc[s["teamB"] == matches[match][1], col].max() for col in blcols] + \
+                                  [s.loc[s["teamR"] == matches[match][1], col].max() for col in rlcols] + \
+                                  s.loc[(s["teamB"] == matches[match][0]), df.filter(regex="pidB").columns].iloc[1].to_list() + \
+                                    s.loc[(s["teamR"] == matches[match][0]), df.filter(regex="pidR").columns].iloc[1].to_list()
+    # print(predictdf[list(blcols)[:1] + list(rlcols)[:1]])
+    predictions = model.predict(predictdf)
+
+    matches = [matches[i] + [predictions[i]] for i in range(len(matches))]
+
+stats_dict = { }
+for match in matches:
+    if match[0] not in stats_dict:
+        stats_dict[match[0]] = 0
+    if match[1] not in stats_dict:
+        stats_dict[match[1]] = 0
+
+    temp = [0, 0]
+    for stat in match[2:]:
+        if float(stat) > 0.51:
+            temp[0] += 1
+        elif float(stat) < 0.49:
+            temp[1] += 1
+        else:
+            temp[1] += 0.5
+            temp[1] += 0.5
+
+    if temp[0] - temp[1] > 2:
+        stats_dict[match[0]] +=1
+    elif temp[0] - temp[1] < -2:
+        stats_dict[match[1]] +=1
+    else:
+        stats_dict[match[0]] += 0.5
+        stats_dict[match[1]] += 0.5
+
+print(json.dumps(stats_dict, indent=2))
+print(json.dumps(matches, indent=2))
 #validation["p"] = validation.loc[:, "result"]
 # for prediction in predictions:
 #     # condition = (validation["teamB"] == prediction[0]) & (validation["teamR"] == prediction[1])
