@@ -43,8 +43,22 @@ lose = ["GAM Esports", "Team Liquid", "Bilibili Gaming", "NRG", "Dplus KIA", "G2
   "G2 Esports": 7.0,
   "JD Gaming": 7,
   "Team BDS": 5.5,
-
 }
+{
+  "NRG": 18.5,
+  "LNG Esports": 16.5,
+  "Fnatic": 16.0,
+  "G2 Esports": 15.5,
+  "Dplus KIA": 12.0,
+  "Team Liquid": 9.0,
+  "MAD Lions": 8.5,
+  "Bilibili Gaming": 8.0,
+  "Cloud9": 8.0,
+  "GAM Esports": 7.5,
+  "JD Gaming": 7,
+  "Team BDS": 5.5
+}
+
 
 win win = ["KT Rolster", "Gen.G eSports", "Fnatic", "LNG Esports", "T1", "Dplus KIA", "Weibo Gaming"]
 win lose /lose win = ["T1", "Dplus KIA", "Weibo Gaming" ]
