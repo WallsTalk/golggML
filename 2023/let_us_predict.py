@@ -41,8 +41,8 @@ matches = [
 # winners = ["Cloud9", "JD Gaming", "Team Liquid", "Dplus KIA", "Weibo Gaming", "Fnatic", "Bilibili Gaming", "G2 Esports"]
 # winners = ["Team BDS", "NRG", "MAD Lions", "GAM Esports"]
 #winners = ["T1", "LNG Esports", "G2 Esports", "JD Gaming", "Fnatic", "Dplus KIA", "GAM Esports", "MAD Lions"]
-# winners = ["GAM Esports", "Team Liquid", "Bilibili Gaming", "G2 Esports", "Team BDS", "LNG Esports", "MAD Lions", "NRG"]
-# matches = [[winners[winner], winners[wwiner]] if i ==0  else [winners[wwiner], winners[winner]] for winner in range(len(winners)) for wwiner in range(winner+1,len(winners)) for i in range(2)]
+winners = ["GAM Esports", "Team Liquid", "Bilibili Gaming", "NRG", "Dplus KIA", "G2 Esports", "JD Gaming", "Team BDS", "Fnatic", "LNG Esports", "Cloud9",  "MAD Lions"]
+matches = [[winners[winner], winners[wwiner]] if i ==0 else [winners[wwiner], winners[winner]] for winner in range(len(winners)) for wwiner in range(winner+1,len(winners)) for i in range(2)]
 
 seasons = [8, 9, 10, 11, 12]
 
@@ -79,7 +79,7 @@ for season in seasons:
 
 trainw = ww.loc[:, list(lcols) + list(pid)]
 result = ww.loc[:, "result"]
-matches = matches + [[match[1], match[0]] for match in matches]
+#matches = matches + [[match[1], match[0]] for match in matches]
 
 
 
@@ -132,8 +132,7 @@ for match in matches:
         stats_dict[match[0]] += 0.5
         stats_dict[match[1]] += 0.5
 
-print(json.dumps(stats_dict, indent=2))
-print(json.dumps(matches, indent=2))
+print(json.dumps(dict(sorted(stats_dict.items(), key=lambda x:x[1], reverse=True)), indent=2))
 #validation["p"] = validation.loc[:, "result"]
 # for prediction in predictions:
 #     # condition = (validation["teamB"] == prediction[0]) & (validation["teamR"] == prediction[1])
