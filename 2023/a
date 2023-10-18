@@ -43,3 +43,90 @@
 win ["Gen.G eSports", "KT Rolster", "T1", "Dplus KIA", "JD Gaming", "Fnatic", "Weibo Gaming", "Cloud9"]
 lose ["GAM Esports", "Team Liquid", "Bilibili Gaming", "G2 Esports", "Team BDS", "LNG Esports", "NRG", "MAD Lions"
 
+{'KT Rolster': 13.5, 'Gen.G eSports': 8, 'Fnatic': 7.5, 'Dplus KIA': 6.5, 'Weibo Gaming': 6, 'Cloud9': 6, 'T1': 5.5, 'JD Gaming': 3}
+{'KT Rolster': 14, 'Gen.G eSports': 9.0, 'Fnatic': 7.5, 'Dplus KIA': 6, 'Weibo Gaming': 6, 'Cloud9': 5.5, 'T1': 4.5, 'JD Gaming': 3.5}
+{'KT Rolster': 14, 'Gen.G eSports': 8.5, 'Fnatic': 8, 'Dplus KIA': 6.5, 'Weibo Gaming': 6, 'T1': 5, 'Cloud9': 5.0, 'JD Gaming': 3}
+{'NRG': 12.5, 'LNG Esports': 9, 'Team Liquid': 8.5, 'GAM Esports': 6.0, 'G2 Esports': 6.0, 'Bilibili Gaming': 5.5, 'MAD Lions': 4.5, 'Team BDS': 4.0}
+{'NRG': 12.5, 'LNG Esports': 9.0, 'Team Liquid': 8.5, 'G2 Esports': 8.0, 'GAM Esports': 5.0, 'Bilibili Gaming': 5.0, 'MAD Lions': 4.5, 'Team BDS': 3.5}
+{'NRG': 10.5, 'LNG Esports': 9.5, 'Team Liquid': 7.5, 'G2 Esports': 7.5, 'Bilibili Gaming': 6.5, 'MAD Lions': 6.5, 'GAM Esports': 5.5, 'Team BDS': 2.5}
+
+win win ["KT Rolster", 'Gen.G eSports', 'Fnatic', 'Dplus KIA']
+
+win lose / lose win ['Weibo Gaming', 'Cloud9', 'T1', 'JD Gaming', 'LNG Esports', 'NRG', 'Team Liquid', 'G2 Esports']
+
+lose lose ['MAD Lions', 'Team BDS', 'GAM Esports', 'Bilibili Gaming']
+
+{'KT Rolster': 5.5, 'Dplus KIA': 2.5, 'Gen.G eSports': 2, 'Fnatic': 2}
+{'KT Rolster': 6, 'Gen.G eSports': 2, 'Fnatic': 2, 'Dplus KIA': 2}
+{'KT Rolster': 6, 'Gen.G eSports': 2.5, 'Dplus KIA': 2, 'Fnatic': 1.5}
+{'KT Rolster': 6, 'Gen.G eSports': 2, 'Fnatic': 2, 'Dplus KIA': 2}
+{'KT Rolster': 5.5, 'Dplus KIA': 2.5, 'Gen.G eSports': 2, 'Fnatic': 2}
+{'KT Rolster': 6, 'Gen.G eSports': 2.5, 'Dplus KIA': 2, 'Fnatic': 1.5}
+
+
+{'Weibo Gaming': 10.0, 'NRG': 9.5, 'Team Liquid': 8.5, 'T1': 8.0, 'LNG Esports': 8, 'G2 Esports': 5.5, 'Cloud9': 4.0, 'JD Gaming': 2.5}
+{'NRG': 10.5, 'Weibo Gaming': 9.5, 'T1': 8.0, 'LNG Esports': 8.0, 'Team Liquid': 6.0, 'G2 Esports': 5.5, 'Cloud9': 4.5, 'JD Gaming': 4.0}
+{'NRG': 10.0, 'Weibo Gaming': 9.5, 'Team Liquid': 8.5, 'LNG Esports': 8, 'T1': 7.0, 'G2 Esports': 7.0, 'Cloud9': 4.5, 'JD Gaming': 1.5}
+{'NRG': 11.0, 'LNG Esports': 9, 'T1': 8.0, 'Weibo Gaming': 7.5, 'Team Liquid': 7.0, 'Cloud9': 5, 'G2 Esports': 5.0, 'JD Gaming': 3.5}
+{'NRG': 10.0, 'T1': 9.0, 'LNG Esports': 8.5, 'Weibo Gaming': 7.5, 'Team Liquid': 6.5, 'G2 Esports': 5.5, 'Cloud9': 5, 'JD Gaming': 4.0}
+{'Team Liquid': 9.5, 'T1': 9.0, 'NRG': 9.0, 'Weibo Gaming': 8.5, 'LNG Esports': 8.0, 'G2 Esports': 5.0, 'Cloud9': 4.5, 'JD Gaming': 2.5}
+{'NRG': 10.5, 'Weibo Gaming': 8.5, 'T1': 8.5, 'LNG Esports': 8.5, 'Team Liquid': 6.5, 'G2 Esports': 5.5, 'Cloud9': 4.5, 'JD Gaming': 3.5}
+
+{'GAM Esports': 4.0, 'MAD Lions': 3, 'Bilibili Gaming': 3.0, 'Team BDS': 2.0}
+{'Bilibili Gaming': 3.5, 'Team BDS': 3, 'GAM Esports': 3, 'MAD Lions': 2.5}
+{'Bilibili Gaming': 3.5, 'Team BDS': 3, 'GAM Esports': 3, 'MAD Lions': 2.5}
+{'GAM Esports': 4.5, 'MAD Lions': 3, 'Team BDS': 2.5, 'Bilibili Gaming': 2}
+{'GAM Esports': 4.5, 'Bilibili Gaming': 4.0, 'MAD Lions': 2.0, 'Team BDS': 1.5}
+{'GAM Esports': 4.5, 'Bilibili Gaming': 4.0, 'MAD Lions': 2.0, 'Team BDS': 1.5}
+
+
+win win win ['KT Rolster', 'Gen.G eSports']
+
+win win lose / win lose win / lose win win ["Weibo Gaming", 'NRG', 'T1', 'LNG Esports', 'Fnatic', 'Dplus KIA']
+
+lose lose win / win lose lose / lose win lose ['JD Gaming', 'Cloud9', 'G2 Esports', 'Team Liquid', 'GAM Esports', 'Bilibili Gaming']
+
+lose lose lose ['MAD Lions', 'Team BDS']
+
+
+{'Fnatic': 6.5, 'Weibo Gaming': 6.0, 'Dplus KIA': 5.5, 'NRG': 4.0, 'T1': 4.0, 'LNG Esports': 4.0}
+{'Fnatic': 7.0, 'Weibo Gaming': 5.5, 'Dplus KIA': 5, 'NRG': 4.5, 'T1': 4.0, 'LNG Esports': 4}
+{'Weibo Gaming': 6.5, 'Fnatic': 6.0, 'Dplus KIA': 5.5, 'NRG': 4.5, 'T1': 4.0, 'LNG Esports': 3.5}
+{'Fnatic': 6.5, 'Weibo Gaming': 5.5, 'NRG': 5.0, 'Dplus KIA': 5, 'LNG Esports': 4.5, 'T1': 3.5}
+{'Weibo Gaming': 6, 'Fnatic': 6, 'NRG': 5.5, 'Dplus KIA': 5, 'LNG Esports': 4, 'T1': 3.5}
+{'Weibo Gaming': 6.5, 'Fnatic': 6.5, 'Dplus KIA': 5, 'NRG': 4.5, 'T1': 4.0, 'LNG Esports': 3.5}
+
+
+
+{'Team Liquid': 6.0, 'G2 Esports': 5.5, 'GAM Esports': 5.0, 'JD Gaming': 4.5, 'Cloud9': 4.5, 'Bilibili Gaming': 4.5}
+{'Team Liquid': 6.5, 'Bilibili Gaming': 5.5, 'Cloud9': 5, 'G2 Esports': 4.5, 'GAM Esports': 4.5, 'JD Gaming': 4.0}
+{'Team Liquid': 7.5, 'Cloud9': 5, 'G2 Esports': 5.0, 'Bilibili Gaming': 5.0, 'GAM Esports': 4.0, 'JD Gaming': 3.5}
+{'Team Liquid': 7.5, 'G2 Esports': 6.0, 'Cloud9': 4.5, 'Bilibili Gaming': 4.5, 'GAM Esports': 4.0, 'JD Gaming': 3.5}
+{'Team Liquid': 7.0, 'G2 Esports': 5.0, 'Bilibili Gaming': 5.0, 'Cloud9': 4.5, 'GAM Esports': 4.5, 'JD Gaming': 4.0}
+{'G2 Esports': 6.0, 'Cloud9': 5, 'Team Liquid': 5.0, 'GAM Esports': 5.0, 'JD Gaming': 4.5, 'Bilibili Gaming': 4.5}
+{'G2 Esports': 4.5, 'GAM Esports': 4.5, 'Cloud9': 4, 'JD Gaming': 3.5, 'Bilibili Gaming': 3.5}
+{'G2 Esports': 6.0, 'GAM Esports': 4.5, 'JD Gaming': 3.5, 'Cloud9': 3.5, 'Bilibili Gaming': 2.5}
+{'G2 Esports': 6.0, 'JD Gaming': 3.5, 'Cloud9': 3.5, 'GAM Esports': 3.5, 'Bilibili Gaming': 3.5}
+{'G2 Esports': 6.5, 'JD Gaming': 3.5, 'GAM Esports': 3.5, 'Bilibili Gaming': 3.5, 'Cloud9': 3}
+{'G2 Esports': 6.5, 'JD Gaming': 3.5, 'Cloud9': 3.5, 'Bilibili Gaming': 3.5, 'GAM Esports': 3}
+{'G2 Esports': 5.0, 'Bilibili Gaming': 4.5, 'JD Gaming': 3.5, 'Cloud9': 3.5, 'GAM Esports': 3.5}
+
+win win win ['Fnatic', 'Weibo Gaming', 'Dplus KIA']
+
+2-2 ['LNG Esports', 'T1', 'NRG', 'Team Liquid', 'G2 Esports', 'JD Gaming']
+
+lose lose lose []
+
+{'NRG': 8.0, 'LNG Esports': 6, 'T1': 5.5, 'Team Liquid': 5.0, 'G2 Esports': 4.5, 'JD Gaming': 1.0}
+{'NRG': 8.5, 'T1': 6.5, 'Team Liquid': 6.5, 'LNG Esports': 4.5, 'G2 Esports': 3.0, 'JD Gaming': 1.0}
+{'NRG': 7.5, 'Team Liquid': 7.0, 'LNG Esports': 5.5, 'T1': 4.0, 'G2 Esports': 4.0, 'JD Gaming': 2}
+{'NRG': 9.0, 'LNG Esports': 5.5, 'T1': 5.5, 'Team Liquid': 5, 'G2 Esports': 4.0, 'JD Gaming': 1.0}
+{'LNG Esports': 6.5, 'T1': 6.5, 'NRG': 6.5, 'Team Liquid': 5.5, 'G2 Esports': 5.0, 'JD Gaming': 0}
+{'NRG': 8.5, 'LNG Esports': 6.5, 'T1': 5.0, 'Team Liquid': 4.0, 'G2 Esports': 4.0, 'JD Gaming': 2.0}
+
+{'T1': 6, 'LNG Esports': 5, 'G2 Esports': 4.5, 'Bilibili Gaming': 3, 'JD Gaming': 1.5}
+{'T1': 5.0, 'LNG Esports': 4.5, 'G2 Esports': 4.0, 'Bilibili Gaming': 4.0, 'JD Gaming': 2.5}
+{'T1': 6, 'LNG Esports': 5, 'G2 Esports': 4.5, 'Bilibili Gaming': 3, 'JD Gaming': 1.5}
+{'T1': 6, 'LNG Esports': 5, 'G2 Esports': 4.5, 'Bilibili Gaming': 3, 'JD Gaming': 1.5}
+{'T1': 5.0, 'LNG Esports': 4.5, 'G2 Esports': 4.0, 'Bilibili Gaming': 4.0, 'JD Gaming': 2.5}
+{'T1': 5.0, 'LNG Esports': 4.5, 'G2 Esports': 4.0, 'Bilibili Gaming': 4.0, 'JD Gaming': 2.5}

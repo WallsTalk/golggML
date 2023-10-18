@@ -41,7 +41,7 @@ df = df.drop(columns=df.filter(regex="(event|time)(id){0,1}[0-9]+").columns)
 # winners = ["Cloud9", "JD Gaming", "Team Liquid", "Dplus KIA", "Weibo Gaming", "Fnatic", "Bilibili Gaming", "G2 Esports"]
 # winners = ["Team BDS", "NRG", "MAD Lions", "GAM Esports"]
 #winners = ["T1", "LNG Esports", "G2 Esports", "JD Gaming", "Fnatic", "Dplus KIA", "GAM Esports", "MAD Lions"]
-winners = ["Gen.G eSports", "KT Rolster", "T1", "Dplus KIA", "JD Gaming", "Fnatic", "Weibo Gaming", "Cloud9"]
+winners = ['LNG Esports', 'T1', 'G2 Esports', 'JD Gaming', 'Bilibili Gaming']
 matches = [[winners[winner], winners[wwiner]] if i ==0 else [winners[wwiner], winners[winner]] for winner in range(len(winners)) for wwiner in range(winner+1,len(winners)) for i in range(2)]
 
 seasons = [8, 9, 10, 11, 12]
