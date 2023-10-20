@@ -52,7 +52,7 @@ for season in seasons:
     times = df.loc[cond, ["season"] + list(df.filter(regex="time[0-9]+").columns)].to_numpy()
     events = df.loc[cond, ["season"] + list(df.filter(regex="event[0-9]+").columns)].to_numpy()
     times = [times[i][j] for i in range(len(events)) for j in range(len(events[i])) if events[i][j] in ['rnexus', 'bnexus']]
-    print(season, max(times)//60, max(times)%60)
+    print(season, int(max(times)//60), "min", int(max(times)%60), "sec")
 
 del times
 del events
@@ -62,7 +62,7 @@ del events
 
 
 
-print("\n\n\ndragons")
+print("\n\n\n## dragons")
 rex = "ocean-dragon|cloud-dragon|elder-dragon|fire-dragon|hextech-dragon|mountain-dragon|chemtech-dragon".split("|")
 for season in seasons:
     cond = (df["turney"].str.contains("World")) & (df["season"] == season)
@@ -76,7 +76,7 @@ del events
 
 
 
-print("\n\n\npentas")
+print("\n\n\n## pentas")
 for season in seasons:
     player_dict = {}
     cond = (df["turney"].str.contains("World")) & (df["season"] == season)
@@ -266,7 +266,7 @@ for season in seasons:
                 champs_dict[champs[k][p]] = []
             champs_dict[champs[k][p]].append(0)
 
-    champs_dict = {champ: (sum(h)/len(h), len(h)) for champ,h in champs_dict.items() if len(h) >=5}
+    champs_dict = {champ: (round(sum(h)/len(h), 2), len(h)) for champ,h in champs_dict.items() if len(h) >=5}
     print(season, sorted(champs_dict.items(), key=lambda x: x[1], reverse=True))
 
 
@@ -294,7 +294,7 @@ for season in seasons:
 
     teams_dict = {team: min(times) for team, times in teams_dict.items()}
     teams_dict = dict(sorted(teams_dict.items(), key=lambda x: x[1], reverse=False))
-    teams_dict = {team: (time//60, time%60) for team, time in teams_dict.items()}
+    teams_dict = {team: (int(time//60), "min", int(time%60), "sec") for team, time in teams_dict.items()}
     print(season, teams_dict)
 
 del times

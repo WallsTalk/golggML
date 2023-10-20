@@ -24,6 +24,7 @@ def main():
         player_dict = json.load(event_file)
 
     for game in game_history:
+        print(game["blue_team"], game["red_team"])
         a = {
             "season": game["season"],
             "turney": game["turney"],
