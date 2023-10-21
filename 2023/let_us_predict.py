@@ -6,7 +6,8 @@ import numpy as np
 
 
 
-df = pd.read_csv('decent_data2.csv')
+df = pd.read_csv('decent_data5.csv')
+print(df.shape)
 validation = pd.read_csv('temp.csv')
 #seasons = list(set(df["season"].tolist()))
 df = df.drop(columns=df.filter(regex="(event|time)(id){0,1}[0-9]+").columns)
@@ -26,14 +27,10 @@ df = df.drop(columns=df.filter(regex="(event|time)(id){0,1}[0-9]+").columns)
 #      ["PSG Talon", "Movistar R7"],
 # ]
 matches = [
-    ["Gen.G eSports", "T1"],
-    [ "NRG", "Team Liquid"],
-     ["JD Gaming", "Bilibili Gaming"],
-     ["Dplus KIA", "KT Rolster"],
-     ["MAD Lions", "Team BDS"],
-     ["GAM Esports", "Fnatic"],
-     ["Weibo Gaming", "G2 Esports"],
-    ["Cloud9", "LNG Esports"]
+    ["Gen.G eSports", "G2 Esports"],
+    [ "NRG", "MAD Lions"],
+    ["Cloud9", "T1"],
+    ["JD Gaming", "LNG Esports"]
 ]
 # winners = ["Gen.G eSports","KT Rolster","G2 Esports","LNG Esports","JD Gaming","Cloud9","T1","Weibo Gaming"]
 # winners = [	"Dplus KIA","Bilibili Gaming","GAM Esports","Fnatic","Team BDS","MAD Lions","Team Liquid","NRG"]
@@ -44,7 +41,7 @@ matches = [
 # winners = ['LNG Esports', 'T1', 'G2 Esports', 'JD Gaming', 'Bilibili Gaming']
 # matches = [[winners[winner], winners[wwiner]] if i ==0 else [winners[wwiner], winners[winner]] for winner in range(len(winners)) for wwiner in range(winner+1,len(winners)) for i in range(2)]
 
-seasons = [8, 9, 10, 11, 12]
+seasons = [8, 9, 10, 11, 12, 13]
 
 #learning_cols = df.filter(regex="[BR]{1}[TJMAS]{1}$").columns
 
@@ -64,6 +61,7 @@ ww = pd.DataFrame(columns=df.columns)
 for season in seasons:
     s = df.loc[~cworlds & (df["season"] == season), :].copy()
     w = df.loc[cworlds & (df["season"] == season), :].copy()
+
     teams = list(set(w.loc[:, "teamB"].tolist() + w.loc[:, "teamR"].tolist()))
     for team in teams:
         for col in blcols:

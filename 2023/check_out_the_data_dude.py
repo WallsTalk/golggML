@@ -185,6 +185,7 @@ def main():
 
     print(statsdf.shape)
     statsdf.to_csv("temp.csv", sep=",", index=False)
+    statsdf.to_csv("temp.csv", mode="a", header=False, sep=",", index=False)
     #     b = { stat.replace(" ", "-").replace("@", "at").replace("%", "-proc").replace("'", "").replace("+", "").lower() + ("B" if i < 5 else "R") + game["stats"]["Role"][i][0]: vals[i] for stat, vals in game["stats"].items()}
     # statsdf = pd.DataFrame([{"teamB": game["blue_team"], "resB": game["blue_result"], "teamR": game["red_team"], "resR": game["red_result"]} | {stat.replace(" ", "-").replace("@", "at").replace("%", "-proc").replace("'", "").replace("+", "").lower() + ("B" if i < 5 else "R") + game["stats"]["Role"][i][0]: vals[i] for stat, vals in game["stats"].items() for
     #   i in range(10)} for game in game_history])

@@ -13,11 +13,11 @@ def main():
     with open(os.path.join(os.getcwd(), "turneys", season), "r") as turneys2023:
         turneys2023 = turneys2023.read().split("\n")
 
-    current_game_colection = "game_collection_worlds_" + season
-    with open(os.path.join(os.getcwd(), "history", current_game_colection), "r") as game_history:
+    current_game_colection = "game_collection3_" + season
+    with open(os.path.join(os.getcwd(), "work_history", current_game_colection), "r") as game_history:
         game_history = [json.loads(game)["game_id"] for game in game_history.read().split("\n")[:-1]]
 
-    with open(os.path.join(os.getcwd(), "history", current_game_colection), "a") as game_collection:
+    with open(os.path.join(os.getcwd(), "work_history", current_game_colection), "a") as game_collection:
 
         for turney in turneys2023[:1]:
             print(turney)

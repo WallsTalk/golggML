@@ -244,7 +244,7 @@ for season in seasons:
 
 
 
-print("\n\n\n#Who will have the highest Win rate at Worlds? (Minimum 5 games played)")
+print("\n\n\n# Who will have the highest Win rate at Worlds? (Minimum 5 games played)")
 for season in seasons:
     champs_dict = {}
     cond = (df["turney"].str.contains("World")) & (df["season"] == season)
