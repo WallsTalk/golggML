@@ -27,10 +27,10 @@ df = df.drop(columns=df.filter(regex="(event|time)(id){0,1}[0-9]+").columns)
 #      ["PSG Talon", "Movistar R7"],
 # ]
 matches = [
-    ["Gen.G eSports", "G2 Esports"],
     [ "NRG", "MAD Lions"],
     ["Cloud9", "T1"],
-    ["JD Gaming", "LNG Esports"]
+    ["Bilibili Gaming", "Fnatic"],
+    ["KT Rolster", "Weibo Gaming"]
 ]
 # winners = ["Gen.G eSports","KT Rolster","G2 Esports","LNG Esports","JD Gaming","Cloud9","T1","Weibo Gaming"]
 # winners = [	"Dplus KIA","Bilibili Gaming","GAM Esports","Fnatic","Team BDS","MAD Lions","Team Liquid","NRG"]

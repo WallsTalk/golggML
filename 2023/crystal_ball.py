@@ -8,8 +8,8 @@ import json
 
 
 # df = pd.read_csv(os.path.join(os.getcwd(),"2023", 'decent_data2.csv'))
-df = pd.read_csv(os.path.join(os.getcwd(), 'temp.csv'))
-seasons = list(set(df["season"].tolist()))
+df = pd.read_csv(os.path.join(os.getcwd(), 'decent_data5.csv'))
+seasons = [13] #list(set(df["season"].tolist()))
 df[df.filter(regex="event[0-9]+").columns].apply(lambda x: x.astype("string", errors='ignore'))
 
 # revers sweeps
