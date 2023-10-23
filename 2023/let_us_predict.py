@@ -30,7 +30,8 @@ matches = [
     [ "NRG", "MAD Lions"],
     ["Cloud9", "T1"],
     ["Bilibili Gaming", "Fnatic"],
-    ["KT Rolster", "Weibo Gaming"]
+    ["KT Rolster", "Weibo Gaming"],
+    ["Team Liquid", "GAM Esports"]
 ]
 # winners = ["Gen.G eSports","KT Rolster","G2 Esports","LNG Esports","JD Gaming","Cloud9","T1","Weibo Gaming"]
 # winners = [	"Dplus KIA","Bilibili Gaming","GAM Esports","Fnatic","Team BDS","MAD Lions","Team Liquid","NRG"]
